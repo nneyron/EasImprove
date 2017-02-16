@@ -1,0 +1,21 @@
+button {
+  /* Ils auront exactement une largeur de 100px */
+  width: 100px;
+
+  /* Leur hauteur est définie automatiquement 
+     en fonction de la taille du contenu */
+  height: auto;
+
+  /* La distance entre le contenu et la bordure 
+     est 20px à droite et à gauche et est 
+     10px en haut et en bas */
+  padding: 10px 20px 10px 20px;
+
+  /* On définit une bordure noire, large de 5px */
+  border: 5px solid black;
+
+  /* La distance minimale entre un paragraphe
+     et une autre boîte au-dessus ou en-dessous
+     sera de 20px */
+  margin: 20px 0 20px 0;
+}
