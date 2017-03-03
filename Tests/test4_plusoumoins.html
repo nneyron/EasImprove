@@ -1,0 +1,66 @@
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<title> Eas'Improve </title>
+<script type="text/javascript">
+<!--
+function nb_aleatoire(min, max)
+{
+     var nb = min + (max-min+1)*Math.random();
+     return Math.floor(nb);
+}
+function jouer()
+{
+	var nb_manches = 0;
+	var rejouer = true;
+	var meilleurScore=0;
+	var score;
+	do 
+		{
+			score=jouer_manche()
+			nb_manches++;	
+			if(score<meilleurScore || meilleurScore==0)
+			{
+				meilleurScore=score;
+			}
+			rejouer=confirm('Rejouer ?');
+		}
+	while (rejouer);
+	alert ('Vous avez joué '+nb_manches+' manches.\nVotre meilleur score est '+meilleurScore);
+}
+function jouer_manche()
+{
+	var aTrouver = nb_aleatoire(1,100);
+	var nbDeTours =0;
+	var bool = true;
+	var prop;
+	do
+		{
+			prop = prompt("Entrez un nombre","Votre nombre");
+			nbDeTours++;
+				if(isNaN(prop)) 
+					{
+						alert('Merci de rentrer un nombre !');		
+						nbDeTours--;
+					}
+				else if(prop>aTrouver) alert('C\'est moins');
+				else if(prop<aTrouver) alert('C\'est plus');
+				else bool = false;
+		}
+	while(bool);
+	alert('Félicitations, vous avez trouvé en '+nbDeTours+' tours !');
+	return nbDeTours;
+}
+//-->
+</script>
+</head>
+
+
+<body>
+
+	<button id="boutonCarte" onclick="jouer()">
+Toto
+</button>
+	<img src="jouer.jpg" alt="jouer" onclick="jouer()" />
+</body>
