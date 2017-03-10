@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" style="text/css" href="testCSS.css" />
+<title> Eas'Improve </title>
+
+<script type="text/javascript">
+<!--
+//Fonctions à créer : retournerCarte(carte), afficherCarte(carte), carteSuivante()
+//Variables à créer : carteEnCours = {"question","reponse"}, tableauCartes
+//Boutons à afficher : question suivante, afficher réponse (+onclick),
+
+var tableauCartes = {
+  question1:"bla", 
+  reponse1:"blabla",
+  question2:"blz", 
+  reponse2:"blfjkdgh"
+}; //code de récupération des données pour remplir le tableau
+  
+  var scoreEtape2 = 0;
+  var scoreEtape3 = 0;
+  
+  function remplirTableau()
+  {
+    
+    
+  }
+  
+var carteARemplir = document.getElementById('boutonCarte'); // voir où on le déclare
+  
+var numeroQuestion = 1; 
+var nomQuestion = "question1";
+var nomReponse = "reponse1";
+
+  function afficherCarte()
+{
+    //mettre la question dans la box
+    //voir quand on s'arrête (au bout de combien de questions/quand on est au bout du tableau)
+    //carteARemplir.value = tableauCartes['question1'];
+  var carteARemplir = document.getElementById('boutonCarte');
+  carteARemplir.value="Commencer"; 
+  document.getElementById('formCaseARemplir').hidden = true;
+  document.getElementById('boutonEtape2').hidden = true;
+  document.getElementById('boutonEtape3').hidden = true;
+  document.getElementById('espaceReponse').hidden = true;
+}
+  
+function retournerCarte()
+{
+  var carteARemplir = document.getElementById('boutonCarte');
+  
+  if(carteARemplir.value==tableauCartes[nomQuestion])
+   carteARemplir.value=tableauCartes[nomReponse]; 
+  else 
+    carteARemplir.value=tableauCartes[nomQuestion]; 
+  
+}
+  
+function tirerNouvelleCarte()
+{
+  numeroQuestion++;
+  nomQuestion = nomQuestion.slice(0,-1); // retire le numéro de question
+  nomQuestion = nomQuestion.concat(numeroQuestion); // rajoute le bon numéro de question
+  nomReponse = nomReponse.slice(0,-1); 
+  nomReponse = nomReponse.concat(numeroQuestion);
+  document.getElementById('boutonCarte').value=tableauCartes[nomQuestion];
+  document.getElementById('boutonCarte').focus(); // rendre le focus à la carte à retourner
+    //tirer une nouvelle carte dans le tableau
+    //les tirer dans l'ordre pour ne pas les tirer plusieurs fois (quitte à choisir dix questions aléatoirement dans le load)
+  if(numeroQuestion==10) 
+    {
+      document.getElementById('boutonEtape2').hidden = true;
+  		document.getElementById('boutonQuestionSuivante').disabled = true;
+    }
+}
+  //ETAPE DEUX : RELIER LE MOT ET SA TRADUCTION
+  //Se gérera sûrement avec un form
+  function chargerEtape2()
+  {
+    document.getElementById('boutonCarte').hidden = true;
+    document.getElementById('boutonEtape2').hidden = true;
+    document.getElementById('boutonQuestionSuivante').hidden = true;
+  }
+  
+  //ETAPE TROIS : TAPER LA REPONSE
+   function chargerEtape3()
+  {
+    document.getElementById('caseARemplir').hidden = false;
+    document.getElementById('boutonQuestionSuivante').disabled = false;
+  }
+  
+  function verifierReponse()
+  {
+  if(document.getElementById('caseARemplir').value==tableauCartes[nomReponse])
+    {
+      //augmenter score
+      scoreEtape3++;
+      //dire qu'on a la bonne réponse
+      document.getElementById('espaceReponse').innerHTML = "You said: "+document.getElementById('caseARemplir').value +". Congratulations! That's the good answer!"
+    }
+    else
+    {
+      //dire que la réponse est fausse et retourner la carte pour donner la bonne
+      document.getElementById('espaceReponse').innerHTML = "You said: "+document.getElementById('caseARemplir').value + ". That's a wrong answer! "; // voir si il faut réinitialiser ce champ à chaque fois ! 
+      
+    }
+    retournerCarte();
+  }
+  
+//-->
+</script>
+</head>
+
+
+
+
+<body onload="afficherCarte()">
+<p>
+<input type="submit" id="boutonCarte"  title="Cliquer pour retourner" onclick="retournerCarte()"></input>
+  </p>
+<p>
+<form id="formCaseARemplir" onsubmit="verifierReponse()">
+  Enter your translation: <input type="text" id="caseARemplir"></input></p>
+</form>
+<input type="button" id="boutonQuestionSuivante" title="Passer à la question suivante" value=">" onclick="tirerNouvelleCarte()"></input>
+<input type="button" id="boutonEtape2" title="Passer à l'étape suivante" value="Étape 2" onclick="chargerEtape2()"></input>
+<input type="button" id="boutonEtape3" title="Passer à l'étape suivante" value="Étape 3" onclick="chargerEtape3()"></input>
+<p id="espaceReponse">
+  ff
+</p>
+</body> 
