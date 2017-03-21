@@ -12,7 +12,7 @@
 var tableauCartes = [
 "question1", 
 "reponse1",
-"Question2", 
+"question2", 
 "reponse2",
   "question3",
   "reponse3",
@@ -45,8 +45,6 @@ var tableauCartes = [
 var carteARemplir = document.getElementById('boutonCarte'); // voir où on le déclare
   
 var numeroQuestion = 1; 
-  
-// $('td').click(function(){changerStatutCase(this);});
 
   function afficherCarte()
 {
@@ -66,8 +64,7 @@ var numeroQuestion = 1;
   
 function retournerCarte() 
 {
-  
-  document.getElementById('boutonQuestionSuivante').hidden=false;
+  document.getElementById('boutonQuestionSuivante').hidden=false; 
   document.getElementById('numQuestion').innerHTML='Question '+numeroQuestion;
   var carteARemplir = document.getElementById('boutonCarte');
   
@@ -90,8 +87,19 @@ function retournerCarte()
       document.getElementById('boutonCarte').style.pointerEvents='none';
       document.getElementById('jeNeSaisPas').style.visibility='visible';
       document.getElementById('groupeEtape3').hidden=false;
-      document.getElementById('boutonQuestionSuivante').disabled = false;
+      //document.getElementById('boutonQuestionSuivante').disabled = false;
     	document.getElementById('boutonQuestionSuivante').hidden = false;
+      document.getElementById('caseARemplir').value=""; 
+    }
+  
+  if(jeuEnCours==3 && numQuestion==1)
+    {
+      document.getElementById('caseARemplir').value=""; 
+      document.getElementById('jeNeSaisPas').disabled=false;
+      document.getElementById('boutonValider').disabled=false;
+      document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FFF7E6";
+      document.getElementById('boutonQuestionSuivante').disabled=true;
+      document.getElementById('caseARemplir').focus();
     }
 }
   
@@ -112,8 +120,10 @@ function tirerNouvelleCarte()
     }
   if(jeuEnCours==3)
     {
-      document.getElementById('caseARemplir').value="";  					document.getElementById('jeNeSaisPas').disabled=false;
+      document.getElementById('caseARemplir').value=""; 
+      document.getElementById('jeNeSaisPas').disabled=false;
       document.getElementById('boutonValider').disabled=false;
+      document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FFF7E6";
       document.getElementById('boutonQuestionSuivante').disabled=true;
       document.getElementById('caseARemplir').focus();
     }
@@ -128,7 +138,7 @@ function tirerNouvelleCarte()
     document.getElementById('espaceConsigne').innerHTML="Click on a word and its translation to win!";
     document.getElementById('espaceReponse').hidden = false;
     document.getElementById('nomEtape').innerHTML='Second step : find the pairs';
-        document.getElementById('boutonQuestionSuivante').disabled=true;
+    document.getElementById('boutonQuestionSuivante').disabled=true;
 
     jeuEnCours=2;
     //AFFICHAGE DU TABLEAU TYPE MEMORY
@@ -161,7 +171,7 @@ function tirerNouvelleCarte()
   var deuxiemeCaseCliquee;
   var reponsePrecedenteJuste=false;
   var nombreQuestionsRepondues=0;
-  var score=10; //voir avec les filles pour le score initial
+  var scoreEtape2=10; 
   function test(caseCliquee) //changer nom fonction
   {
       if(nombreCartesColorees == 0)
@@ -210,7 +220,7 @@ function tirerNouvelleCarte()
                   	//mauvais appariement 
                     document.getElementById('espaceReponse').innerHTML ="That's a wrong answer. You lose a point";
                     reponsePrecedenteJuste=false;
-                    score--;
+                    scoreEtape2--;
                 	}
               }
             else if (deuxiemeCaseCliquee.innerHTML == tableauCartes[i] && i%2==1)//reponse
@@ -228,11 +238,11 @@ function tirerNouvelleCarte()
                   	//mauvais appariement 
                     document.getElementById('espaceReponse').innerHTML ="That's a wrong answer. You lose a point";
                     reponsePrecedenteJuste=false;
-                    score--;
+                    scoreEtape2--;
                 	}
               }
           }
-        document.getElementById('espaceScore').innerHTML="Your score is: "+score+"/10";
+        document.getElementById('espaceScore').innerHTML="Your score is: "+scoreEtape2+"/10";
         if(nombreQuestionsRepondues==10)
                   {
                     document.getElementById('boutonEtape3').hidden = false;
@@ -275,6 +285,7 @@ function tirerNouvelleCarte()
     document.getElementById('boutonValider').disabled=true;
     document.getElementById('boutonQuestionSuivante').disabled=false;
     document.getElementById('boutonQuestionSuivante').focus();
+    document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FC724E";
     
     if(document.getElementById('caseARemplir').value=="") //si validation sans réponse ou appui sur "I don't know"
       {
