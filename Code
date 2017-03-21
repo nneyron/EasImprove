@@ -64,6 +64,10 @@ var numeroQuestion = 1;
   
 function retournerCarte() 
 {
+  if(numeroQuestion==0) 
+  {questionZero=true;
+  numeroQuestion++;}
+  else {questionZero=false;}
   document.getElementById('boutonQuestionSuivante').hidden=false; 
   document.getElementById('numQuestion').innerHTML='Question '+numeroQuestion;
   var carteARemplir = document.getElementById('boutonCarte');
@@ -87,12 +91,12 @@ function retournerCarte()
       document.getElementById('boutonCarte').style.pointerEvents='none';
       document.getElementById('jeNeSaisPas').style.visibility='visible';
       document.getElementById('groupeEtape3').hidden=false;
-      //document.getElementById('boutonQuestionSuivante').disabled = false;
+      document.getElementById('boutonQuestionSuivante').disabled = false;
     	document.getElementById('boutonQuestionSuivante').hidden = false;
       document.getElementById('caseARemplir').value=""; 
     }
   
-  if(jeuEnCours==3 && numQuestion==1)
+  if(jeuEnCours==3 && questionZero)
     {
       document.getElementById('caseARemplir').value=""; 
       document.getElementById('jeNeSaisPas').disabled=false;
@@ -100,6 +104,9 @@ function retournerCarte()
       document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FFF7E6";
       document.getElementById('boutonQuestionSuivante').disabled=true;
       document.getElementById('caseARemplir').focus();
+      document.getElementById('numQuestion').hidden=false;
+      numeroQuestion++;
+
     }
 }
   
@@ -255,7 +262,7 @@ function tirerNouvelleCarte()
   //gestion avec un form
    function chargerEtape3()
   {
-    numeroQuestion = 1; 
+    numeroQuestion = 0; 
     scoreEtape3=0;
     jeuEnCours=3; 
    
@@ -286,6 +293,8 @@ function tirerNouvelleCarte()
     document.getElementById('boutonQuestionSuivante').disabled=false;
     document.getElementById('boutonQuestionSuivante').focus();
     document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FC724E";
+    
+    
     
     if(document.getElementById('caseARemplir').value=="") //si validation sans réponse ou appui sur "I don't know"
       {
@@ -319,6 +328,7 @@ function tirerNouvelleCarte()
  				document.getElementById('espaceScore').hidden=true;
         document.getElementById('espaceConsigne').hidden=true;
         document.getElementById('espaceReponse').hidden=true;
+        document.getElementById('numQuestion').hidden=true;
       }
   }
   
