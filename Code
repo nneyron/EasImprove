@@ -26,7 +26,7 @@ var tableauCartes = [
   "reponse7",
   "question8",
   "reponse8",
-  "question9",
+  "question9", 
   "reponse9",
   "question10",
   "reponse10"
@@ -76,13 +76,13 @@ function retournerCarte()
   {
     //au clic, on affiche la réponse
     carteARemplir.value=tableauCartes[2*numeroQuestion -1]; 
-    document.getElementById('boutonCarte').style.backgroundColor="#2A83FF";
+    document.getElementById('boutonCarte').style.backgroundColor="#314A5E";
   }
    
   else //sinon la carte affiche la réponse et au clic on affiche la question
   {
     carteARemplir.value=tableauCartes[2*numeroQuestion-2]; 
-  	document.getElementById('boutonCarte').style.backgroundColor="#2A8399";
+  	document.getElementById('boutonCarte').style.backgroundColor="#47B19B";
   }
     
   
@@ -116,7 +116,7 @@ function tirerNouvelleCarte()
   var boutonCarte = document.getElementById('boutonCarte');
   boutonCarte.value=tableauCartes[2*numeroQuestion-2];
   boutonCarte.focus(); // rendre le focus à la carte à retourner pour pouvoir retourner au clic sur entrée
-  boutonCarte.style.backgroundColor="#2A8399";
+  boutonCarte.style.backgroundColor="#47B19B";
   document.getElementById('numQuestion').innerHTML='Question '+numeroQuestion;
     //tirer une nouvelle carte dans le tableau
     //les tirer dans l'ordre pour ne pas les tirer plusieurs fois (quitte à choisir dix questions aléatoirement dans le load)
@@ -188,27 +188,27 @@ function tirerNouvelleCarte()
            
             if(reponsePrecedenteJuste)
               {
-              premiereCaseCliquee.style.backgroundColor="#BFC6B6"; //bleu
+              premiereCaseCliquee.style.backgroundColor="#FFE8BF"; 
               premiereCaseCliquee.innerHTML =" ";
               premiereCaseCliquee.style.pointerEvents='none';
-        		 	deuxiemeCaseCliquee.style.backgroundColor="#BFC6B6"; //bleu
+        		 	deuxiemeCaseCliquee.style.backgroundColor="#FFE8BF"; 
               deuxiemeCaseCliquee.innerHTML =" ";
               deuxiemeCaseCliquee.style.pointerEvents='none';
               }
             else
               {
-              premiereCaseCliquee.style.backgroundColor="#FFECC6";
-        			deuxiemeCaseCliquee.style.backgroundColor="#FFECC6";
+              premiereCaseCliquee.style.backgroundColor="#E89259";
+        			deuxiemeCaseCliquee.style.backgroundColor="#DBFFDF";
               }
           }
-        caseCliquee.style.backgroundColor = "#232FFF";
+        caseCliquee.style.backgroundColor = "#47B19B";
         nombreCartesColorees++;
         premiereCaseCliquee = caseCliquee;
       }
     else if (nombreCartesColorees == 1)
       {
         deuxiemeCaseCliquee=caseCliquee;
-        caseCliquee.style.backgroundColor = "#232FFF";
+        caseCliquee.style.backgroundColor = "#47B19B";
         
         // CODE DE VERIFICATION DE LA CONCORDANCE DES CASES CHOISIES
         for (var i=0;i<20;i++)
@@ -274,7 +274,7 @@ function tirerNouvelleCarte()
     var boutonCarte = document.getElementById('boutonCarte');
     boutonCarte.style.visibility= 'visible';
     boutonCarte.value="Start";
-    boutonCarte.style.backgroundColor="#99A999";
+    boutonCarte.style.backgroundColor="#8D5838";
     document.getElementById('boutonEtape3').hidden=true;
   	document.getElementById('boutonQuestionSuivante').disabled=true;
     document.getElementById('espaceScore').innerHTML=" ";
@@ -292,7 +292,7 @@ function tirerNouvelleCarte()
     document.getElementById('boutonValider').disabled=true;
     document.getElementById('boutonQuestionSuivante').disabled=false;
     document.getElementById('boutonQuestionSuivante').focus();
-    document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FC724E";
+    document.getElementById('boutonQuestionSuivante').style.backgroundColor="#E89259";
     
     
     
