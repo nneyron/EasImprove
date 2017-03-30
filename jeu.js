@@ -95,7 +95,7 @@ function initialiserPartie()
    for (var k =0; k<nbQuestions; k++)
             {
                document.getElementById(tableauPropositions[k*3]).innerHTML = tableauPropositions[k*3+1];
-               //document.getElementById(tableauPropositions[k*3]).style.class=white; 
+               document.getElementById(tableauPropositions[k*3]).style="color:white"; 
                document.getElementById(tableauPropositions[k*3]).style.backgroundImage="url(./vaisseauAlien_petit.png)"; 
             }
 }
