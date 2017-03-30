@@ -1,10 +1,29 @@
-var fondEspace = new Image();
-fondEspace.src = "http://hdwallpaper20.com/wp-content/uploads/2016/05/space-wallpaper-space_cataclysm_planet_art_explosion_asteroids_comets_fragments.jpg";
 var vaisseau = new Image();
 vaisseau.src = "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png";
 var tableauQuestionsPossibles = ["prop1", true, "prop2", false,"prop3", true, "prop4", false,"prop5", true, "prop6", false,"prop7", true, "prop8", false, "prop9", true, "prop10", false];
 var tableauPropositions = new Array;
+var position=0;
+var nbQuestions = 4;
 
+/* TODO :
+gérer le fait qu'il y ait parfois moins de quatre prop
+gérer dix proposition sur trois lignes
+fonction tirer() :
+    mettre un faisceau laser
+    obtenir la proposition tirée
+    envoyer le résultat à la fonction vérifierReponse()
+    faire disparaître la case si c'est bien une fausse prop
+    faire apparaître une perte de points sinon
+mettre des vaisseaux à la place des boutons
+jauge de PV/score ?
+*/
+function addEvent(obj,event,fct)
+{
+        if( obj.attachEvent)
+                obj.attachEvent('on' + event,fct);
+        else
+                obj.addEventListener(event,fct,true);
+}
 
 window.onload = function() 
 {
@@ -15,9 +34,10 @@ window.onload = function()
    
    //fusée
 	ctx = canvas.getContext('2d'); 
-	ctx.drawImage(vaisseau, 10, 80,35,60); 
+	//ctx.drawImage(vaisseau, -10, 80,35,60); 
    
-   canvas.addEventListener("mousemove", bougerFusee, false);
+   addEvent(canvas,"mousemove",bougerFusee);
+   //canvas.addEventListener("mousemove", bougerFusee, false);
    
    //affichage avant le début
    tableau.hidden = true;
@@ -25,17 +45,15 @@ window.onload = function()
    
 }
 
-function bougerFusee()
+function bougerFusee(event)
 {
    //déplacer la fusée selon les coordonnées en y de la souris
-   //alert('marche');
+   position=event.clientX-42;
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   ctx.drawImage(vaisseau, position, 200,75,100);
 }
 
-function tirer()
-{
-   
-}
-
+//#maintable td.white {color: #ffffff;}  
 function initialiserPartie()
 {
    //affichage
@@ -48,7 +66,7 @@ function initialiserPartie()
    var questionDejaAttribuee = false;
    var questionAttribueeMax=0;
    var rnd = 0;
-   for (var i = 0; i<4 ; i++)
+   for (var i = 0; i<nbQuestions ; i++)
       {
          do
 	         {
@@ -74,10 +92,11 @@ function initialiserPartie()
          while(questionDejaAttribuee);        
          
       }
-   for (var k =0; k<4; k++)
+   for (var k =0; k<nbQuestions; k++)
             {
                document.getElementById(tableauPropositions[k*3]).innerHTML = tableauPropositions[k*3+1];
-               document.getElementById(tableauPropositions[k*3]).style.backgroundColor="#FFFFFF"; 
+               //document.getElementById(tableauPropositions[k*3]).style.class=white; 
+               document.getElementById(tableauPropositions[k*3]).style.backgroundImage="url(./vaisseauAlien_petit.png)"; 
             }
 }
 

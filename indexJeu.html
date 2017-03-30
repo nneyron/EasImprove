@@ -1,16 +1,16 @@
 
 <html>
 	<head>
-		<title>Mini-RPG</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script type="text/javascript" src="jeu.js"></script>
+		<title>EasImprove</title>
+        <link rel="stylesheet" type="text/css" href=".\stylePartie2.css" />
+        <script type="text/javascript" src=".\jeu.js"></script>
 
 	</head>
 	<body>
       <div >
-		<TABLE id=tableau width=100% border=1>
+<TABLE id=tableau width="1200" height="75" border=1>
 <TR>
-   <TD id=case0 width=10%></TD>
+   <TD id=case0 width=10% ></TD>
    <TD id=case1 width=10%></TD>
    <TD id=case2 width=10%></TD>
    <TD id=case3 width=10%></TD>
@@ -24,7 +24,7 @@
          </TR>
          </TABLE>
          <p></p>
-      <canvas id="canvas" onmouseover="" style="cursor: pointer;" onmouseclick="bougerFusee()">Votre navigateur ne supporte pas HTML5, veuillez le mettre à jour pour jouer.
+      <canvas id="canvas" onmouseover="" style="cursor: pointer;" onmouseclick="bougerFusee()" width="1200" height="1000">Votre navigateur ne supporte pas HTML5, veuillez le mettre à jour pour jouer.
       </canvas>
          <input type="button" id="boutonCommencer" title="Start" value="Start" onclick="initialiserPartie()"></input>
       </div>
