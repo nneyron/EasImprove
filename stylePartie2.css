@@ -1,0 +1,40 @@
+body {
+color:black;
+background-color:white;
+background-image:url(http://hdwallpaper20.com/wp-content/uploads/2016/05/space-wallpaper-space_cataclysm_planet_art_explosion_asteroids_comets_fragments.jpg);
+}
+
+#canvas{
+   position:absolute;
+   width:100%;
+   height:100%;
+}
+
+#tableau {
+border:none;
+text-align:center;
+border-spacing:8px;
+}
+
+td{
+   border:none;
+   border-radius:8%;
+}
+
+#boutonCommencer{
+    background-color: white;
+    border: none;
+    color: black;
+    width : 125px;
+    height : 75px;
+    text-align: center;
+   font-size: 16px;
+    border-radius : 5%;
+   position:relative;
+   top:150px;
+   left:20%;
+}
+
+#test,#test2{
+   color:white;
+}
