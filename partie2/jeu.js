@@ -4,6 +4,7 @@ var tableauQuestionsPossibles = ["prop1", true, "prop2", false,"prop3", true, "p
 var tableauPropositions = new Array;
 var position=0;
 var nbQuestions = 4;
+var pause = false;
 
 /* TODO :
 gérer le fait qu'il y ait parfois moins de quatre prop
@@ -29,28 +30,49 @@ window.onload = function()
 {
    //déclaration des variables
    tableau = document.getElementById('tableau');
-	canvas = document.getElementById('canvas');
+   canvas = document.getElementById('canvas');
    boutonCommencer = document.getElementById('boutonCommencer');
    
    //fusée
-	ctx = canvas.getContext('2d'); 
-	//ctx.drawImage(vaisseau, -10, 80,35,60); 
+   ctx = canvas.getContext('2d'); 
+   //ctx.drawImage(vaisseau, -10, 80,35,60); 
    
    addEvent(canvas,"mousemove",bougerFusee);
    //canvas.addEventListener("mousemove", bougerFusee, false);
-   
+   addEvent(canvas,"click",lancerLaser);
    //affichage avant le début
    tableau.hidden = true;
    canvas.hidden =true;
    
 }
+  
+
+function lancerLaser(event)
+{    
+ pause=true;
+ setTimeout(retablirBougerFusee,250);
+ position=event.clientX-5;
+ ctx.beginPath();
+ ctx.moveTo(position,0);
+ ctx.lineTo(position,205);
+ ctx.strokeStyle='white'; 
+ ctx.stroke(); 
+}
+
+function retablirBougerFusee()
+{
+pause=false;
+}
 
 function bougerFusee(event)
 {
+        if(!pause)
+        {
    //déplacer la fusée selon les coordonnées en y de la souris
    position=event.clientX-42;
    ctx.clearRect(0, 0, canvas.width, canvas.height);
    ctx.drawImage(vaisseau, position, 200,75,100);
+}
 }
 
 //#maintable td.white {color: #ffffff;}  
