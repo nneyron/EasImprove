@@ -5,6 +5,8 @@ var tableauPropositions = new Array;
 var position=0;
 var nbQuestions = 4;
 var pause = false;
+//var canvas2 = document.getElementById('canvas2');
+//var ctx2 = canvas2.getContext('2d');
 
 /* TODO :
 gérer le fait qu'il y ait parfois moins de quatre prop
@@ -43,6 +45,7 @@ window.onload = function()
    //affichage avant le début
    tableau.hidden = true;
    canvas.hidden =true;
+   //canvas2.hidden=true;
    
 }
   
@@ -50,7 +53,7 @@ window.onload = function()
 function lancerLaser(event)
 {    
  pause=true;
- setTimeout(retablirBougerFusee,250);
+ setTimeout(retablirBougerFusee,500);
  position=event.clientX-5;
  ctx.beginPath();
  ctx.moveTo(position,0);
@@ -82,6 +85,7 @@ function initialiserPartie()
    boutonCommencer.hidden=true;
    tableau.hidden = false;
    canvas.hidden = false;
+   //canvas2.hidden = false;
    
    //gestion des mots sur lesquels tirer
    //on crée un tableau de douze cases, {"case2", "prop2",false,...}

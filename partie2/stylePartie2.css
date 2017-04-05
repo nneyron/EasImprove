@@ -36,3 +36,15 @@ td{
 #test,#test2{
    color:white;
 }
+
+ /* Set to the same width/height as the canvases 
+.canvas-layers { position:relative; width:1200px; height:1000px }
+
+#canvas2{
+border: 1px solid black;
+width:1200px;
+height:1000px;
+position:absolute;
+top:0; left:0
+}
+*/
