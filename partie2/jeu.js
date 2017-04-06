@@ -52,14 +52,18 @@ window.onload = function()
   
 
 function lancerLaser(event)
-{    
- setTimeout(supprimerLaser,500);
- position=event.clientX-5;
- ctx2.beginPath();
- ctx2.moveTo(position,0);
- ctx2.lineTo(position,205);
- ctx2.strokeStyle='white'; 
- ctx2.stroke(); 
+{ 
+    if(boutonCommencer.hidden)   
+    {
+        setTimeout(supprimerLaser,500);
+        position=event.clientX-7;
+        ctx2.lineWidth=5;
+        ctx2.beginPath();
+        ctx2.moveTo(position,0);
+        ctx2.lineTo(position,208);
+        ctx2.strokeStyle='white'; 
+        ctx2.stroke(); 
+    }
 }
 
 function supprimerLaser()
@@ -70,9 +74,9 @@ function supprimerLaser()
 function bougerFusee(event)
 {  
    //déplacer la fusée selon les coordonnées en y de la souris
-   position=event.clientX-42;
+   position=event.clientX-65;
    ctx.clearRect(0, 0, canvas.width, canvas.height);
-   ctx.drawImage(vaisseau, position, 200,75,100);
+   ctx.drawImage(vaisseau, position, 200,120,160);
 }
 
  
