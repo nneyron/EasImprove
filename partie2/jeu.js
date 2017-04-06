@@ -5,8 +5,8 @@ var tableauPropositions = new Array;
 var position=0;
 var nbQuestions = 4;
 var pause = false;
-//var canvas2 = document.getElementById('canvas2');
-//var ctx2 = canvas2.getContext('2d');
+
+
 
 /* TODO :
 gérer le fait qu'il y ait parfois moins de quatre prop
@@ -20,6 +20,7 @@ fonction tirer() :
 mettre des vaisseaux à la place des boutons
 jauge de PV/score ?
 */
+
 function addEvent(obj,event,fct)
 {
         if( obj.attachEvent)
@@ -33,59 +34,55 @@ window.onload = function()
    //déclaration des variables
    tableau = document.getElementById('tableau');
    canvas = document.getElementById('canvas');
+   canvasLaser = document.getElementById('canvasLaser');
    boutonCommencer = document.getElementById('boutonCommencer');
    
    //fusée
    ctx = canvas.getContext('2d'); 
-   //ctx.drawImage(vaisseau, -10, 80,35,60); 
-   
-   addEvent(canvas,"mousemove",bougerFusee);
-   //canvas.addEventListener("mousemove", bougerFusee, false);
-   addEvent(canvas,"click",lancerLaser);
+   ctx2 = canvasLaser.getContext('2d'); 
+   //ctx.drawImage(vaisseau, position, 200,75,100);
+   addEvent(window,"mousemove",bougerFusee);
+   addEvent(window,"click",lancerLaser);
    //affichage avant le début
    tableau.hidden = true;
    canvas.hidden =true;
-   //canvas2.hidden=true;
+   canvasLaser.hidden=true;
    
 }
   
 
 function lancerLaser(event)
 {    
- pause=true;
- setTimeout(retablirBougerFusee,500);
+ setTimeout(supprimerLaser,500);
  position=event.clientX-5;
- ctx.beginPath();
- ctx.moveTo(position,0);
- ctx.lineTo(position,205);
- ctx.strokeStyle='white'; 
- ctx.stroke(); 
+ ctx2.beginPath();
+ ctx2.moveTo(position,0);
+ ctx2.lineTo(position,205);
+ ctx2.strokeStyle='white'; 
+ ctx2.stroke(); 
 }
 
-function retablirBougerFusee()
+function supprimerLaser()
 {
-pause=false;
+ ctx2.clearRect(0, 0, canvasLaser.width, canvasLaser.height);
 }
 
 function bougerFusee(event)
-{
-        if(!pause)
-        {
+{  
    //déplacer la fusée selon les coordonnées en y de la souris
    position=event.clientX-42;
    ctx.clearRect(0, 0, canvas.width, canvas.height);
    ctx.drawImage(vaisseau, position, 200,75,100);
 }
-}
 
-//#maintable td.white {color: #ffffff;}  
+ 
 function initialiserPartie()
 {
    //affichage
    boutonCommencer.hidden=true;
    tableau.hidden = false;
    canvas.hidden = false;
-   //canvas2.hidden = false;
+   canvasLaser.hidden = false;
    
    //gestion des mots sur lesquels tirer
    //on crée un tableau de douze cases, {"case2", "prop2",false,...}

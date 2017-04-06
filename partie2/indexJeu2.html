@@ -7,10 +7,10 @@
 
 	</head>
 	<body>
-      <div >
+      <div>
 <TABLE id=tableau width="1200" height="75" border=1>
 <TR>
-   <TD id=case0 width=10% ></TD>
+   <TD id=case0 width=10%></TD>
    <TD id=case1 width=10%></TD>
    <TD id=case2 width=10%></TD>
    <TD id=case3 width=10%></TD>
@@ -23,14 +23,17 @@
   
          </TR>
          </TABLE>
-         <p></p>
-      <canvas id="canvas" onmouseover="" style="cursor: pointer; z-index: 0;" width="1200" height="1000">Votre navigateur ne supporte pas HTML5, veuillez le mettre à jour pour jouer.
-      </canvas>
-      <!--<canvas id="canvas2" width="1200" height="1000" class="canvas-layers">Votre navigateur ne supporte pas HTML5, veuillez le mettre à jour pour jouer.</canvas>
-  <canvas id="canvas2" width="1200" height="1000" style="position: absolute; z-index: 1"></canvas>-->
-   <canvas id="canvas2"></canvas>
-   <input type="button" id="boutonCommencer" title="Start" value="Start" onclick="initialiserPartie()"></input>
-      </div>
-	</body>
+</div>
+
+
+<div id="canvases">
+ <canvas id="canvas" onmouseover="" style="cursor: pointer; z-index: 0;" width="1200" height="800">Votre navigateur ne supporte pas HTML5, veuillez le mettre à jour pour jouer.
+ </canvas>
+
+ <canvas id="canvasLaser" style="z-index: 1;" width="1200" height="800"></canvas>
+ <input type="button" id="boutonCommencer" title="Start" value="Start" onclick="initialiserPartie()"></input>
+</div>
+
+</body>
 </html>
 

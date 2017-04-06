@@ -37,14 +37,19 @@ td{
    color:white;
 }
 
- /* Set to the same width/height as the canvases 
-.canvas-layers { position:relative; width:1200px; height:1000px }
+ /* Set to the same width/height as the canvases */
+#canvases { position:relative; width:1200px; height:800px }
 
-#canvas2{
-border: 1px solid black;
-width:1200px;
-height:1000px;
+#canvasLaser{
 position:absolute;
-top:0; left:0
+top:0; left:0;
+width:1200px;
+height:800px;
 }
-*/
+
+#canvas{
+position:absolute;
+top:0; left:0;  
+width: 1200px;
+height: 800px;
+}
