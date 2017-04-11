@@ -10,6 +10,7 @@ var position=0;
 var nbQuestions = 4;
 var pause = false;
 var nbVaisseauxADetruire=0;
+var fini = false;
 
 
 
@@ -144,25 +145,30 @@ function detruireVaisseauAlien(lieuDuTir)
     
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
     {
-        terminer;
-        alert(tableauVaisseauxDisparus.length+"  "+nbVaisseauxADetruire);
+        terminer();
     }
-
-    //alert('disp');
 }
 
 function terminer()
 {
-    alert('fuckoff');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Finished!",canvas.width/2,canvas.height/2);
+    canvas.hidden=true;
+    fini = true;
+    ctx2.font="100px Arial";
+    ctx2.fillStyle = "white";
+    ctx2.textAlign = "center";
+    ctx2.fillText("Finished!",canvas.width/2,canvas.height/2);
 }
 
 function supprimerLaser()
 {
- ctx2.clearRect(0, 0, canvasLaser.width, canvasLaser.height);
+     ctx2.clearRect(0, 0, canvasLaser.width, canvasLaser.height);
+     if(fini)
+    {
+        ctx2.fillStyle = "white";
+        ctx2.font="100px Arial";
+        ctx2.textAlign = "center";
+        ctx2.fillText("Finished!",canvas.width/2,canvas.height/2);
+    }  
 }
 
 function bougerFusee(event)
