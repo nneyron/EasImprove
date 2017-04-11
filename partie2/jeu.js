@@ -2,6 +2,8 @@ var vaisseau = new Image();
 vaisseau.src = "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png";
 var vaisseauAlien = new Image();
 vaisseauAlien.src = "./vaisseauAlien_petit.png";
+var explosion = new Image();
+explosion.src = "./giphy.gif";
 var tableauQuestions = ["prop1t", true, "prop2f", false,"prop3t", true, "prop4f", false,"prop5t", true, "prop6f", false,"prop7t", true, "prop8f", false, "prop9", true, "prop10", false];
 //var tableauPositionsQuestions = new Array;
 var tableauPositionsQuestions=[14,68,62,33,99,6,35,4,41,0];
@@ -11,7 +13,8 @@ var nbQuestions = 4;
 var pause = false;
 var nbVaisseauxADetruire=0;
 var fini = false;
-
+var sonTir = new Audio('./sonTir.mp3');
+var sonExplosion = new Audio('./sonExplosion.mp3');
 
 
 /* TODO :
@@ -105,6 +108,7 @@ function lancerLaser(event)
     //alert(distanceAuVaisseau+"  "+lieuDuTir);
     if(boutonCommencer.hidden)   
     {
+        sonTir.play();
         setTimeout(supprimerLaser,500);
         //position=event.clientX-7;
         ctx2.lineWidth=5;
@@ -140,14 +144,16 @@ function lancerLaser(event)
 function detruireVaisseauAlien(lieuDuTir)
 {
     var nomContexte = "ctxProp"+lieuDuTir;
+    sonExplosion.play();
     window[nomContexte].clearRect(0, 0, 1200, 800);
     tableauVaisseauxDisparus[tableauVaisseauxDisparus.length]=(lieuDuTir-1);
-    
+    window[nomContexte].drawImage(explosion, 120*(lieuDuTir-1),tableauPositionsQuestions[lieuDuTir-1],80,80);
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
     {
         terminer();
     }
 }
+
 
 function terminer()
 {
