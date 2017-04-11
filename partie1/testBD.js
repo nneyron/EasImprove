@@ -9,9 +9,13 @@ ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function (reponse)
     });*/
     //console.log(verbes["records"]["0"]["1"]);
     //console.log(verbes["columns"][4]);
-    console.log(verbes.columns["0"][4]);
+    //console.log(verbes.columns[0]);
     //console.log(verbes["columns"].length);
     console.log(verbes);
-    console.log(verbes[0])
-
+    console.log(verbes.valueOf(['columns'][0]));
+    console.log(verbes['columns']);
+    console.log(verbes.columns);
+    var toto = {squirrel:false,
+    envents:["11","22","33"]};
+    console.log(toto.envents[0]);
 });

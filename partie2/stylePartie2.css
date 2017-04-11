@@ -4,7 +4,7 @@ background-color:darkblue;
 background-image:url(./cosmos.jpg);
 }
 
-#tableau {
+/*#tableau {
 border:none;
 text-align:center;
 border-spacing:8px;
@@ -13,11 +13,11 @@ border-spacing:8px;
 td{
    border:none;
    border-radius:8%;
-   /*background-image:url(./vaisseauAlien.png);*/
+   background-image:url(./vaisseauAlien.png);
    background-repeat:no-repeat;
    background-position-x: center;
    vertical-align: bottom;
-}
+}*/
 
 #boutonCommencer{
     background-color: white;
@@ -40,11 +40,11 @@ td{
  /* Set to the same width/height as the canvases */
 #canvases { position:relative; width:1200px; height:800px }
 
-#canvasLaser{
+.canvases2 {
 position:absolute;
-top:0; left:0;
-width:1200px;
-height:800px;
+top:0; left:0;  
+width: 1200px;
+height: 800px;
 }
 
 #canvas{
