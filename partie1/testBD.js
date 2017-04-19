@@ -14,10 +14,7 @@ ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function (reponse)
     console.log(verbes);
     console.log(verbes.valueOf(['columns'][0]));
     console.log(verbes['columns']);
-    console.log(verbes.columns);
-    var toto = {squirrel:false,
-    envents:["11","22","33"]};
-    console.log(toto.envents[0]);
+    console.log(verbes.verbes);
 });
 /*// Exécute un appel AJAX GET
 // Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
