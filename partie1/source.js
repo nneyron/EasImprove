@@ -20,24 +20,71 @@ var tableauCartes = [
   "question10",
   "reponse10"
 ]; //code de récupération des données pour remplir le tableau
-  
+  var tableauQuestionsAPoser = [];
+  var tableauVerbes = [];
   var scoreEtape2 = 0; //à merger avec score !!
   var scoreEtape3 = 0;
   var jeuEnCours = 1;
   var espaceScore = document.getElementById('espaceScore');
   
-  function remplirTableau()
-  {
-    
-  }
+function ajaxGet(url, callback) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url);
+    req.addEventListener("load", function () {
+        if (req.status >= 200 && req.status < 400) {
+            // Appelle la fonction callback en lui passant la réponse de la requête
+            callback(req.responseText);
+        } else {
+            console.error(req.status + " " + req.statusText + " " + url);
+        }
+    });
+    req.addEventListener("error", function () {
+        console.error("Erreur réseau avec l'URL " + url);
+    });
+    req.send(null);
+}
+
+function chargerTableau()
+{
+  setTimeout(chargerQuestions,1500);
+  ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function(reponse) {
+  var resultat = JSON.parse(reponse);
+  resultat.verbes.records.forEach(function (verbe) {
+      console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
+      //alert(verbe[0]);
+      //alert((verbe[0]-1)*2);
+      //tableauVerbes[] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
+      tableauVerbes[(verbe[0]-1)*2] = ""+verbe[1] +" "+ verbe[2];
+      tableauVerbes[(verbe[0]-1)*2+1] = ""+verbe[3];
+      //alert(tableauVerbes[(verbe[0]-1)*2]);
+  });
+});
+  //chargerQuestions();
+}
+
+function chargerQuestions()
+{
+    //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
+for(var i =0; i<10;i++)
+   {
+        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
+        //alert(tableauQuestionsAPoser[i]);
+        //alert(tableauVerbes[tableauQuestionsAPoser[i]*2]);
+        tableauCartes[2*i] = tableauVerbes[tableauQuestionsAPoser[i]*2];
+        tableauCartes[2*i+1] = tableauVerbes[tableauQuestionsAPoser[i]*2+1];
+        
+   }
+
+}
+
   
 var carteARemplir = document.getElementById('boutonCarte'); // voir où on le déclare
-  
 var numeroQuestion = 1; 
 
 function afficherCarte()
 {
 //affiche l'étape 1 avec la carte qui vaut 'Start'
+  chargerTableau();
   var carteARemplir = document.getElementById('boutonCarte');
   carteARemplir.value="Start"; 
   document.getElementById('boutonEtape2').hidden = true;
@@ -46,7 +93,7 @@ function afficherCarte()
   document.getElementById('tableau').hidden=true;
   document.getElementById('groupeEtape3').hidden=true;
   document.getElementById('jeNeSaisPas').style.visibility='hidden';
-   document.getElementById('nomEtape').innerHTML='First step : flip the cards and learn!';
+  document.getElementById('nomEtape').innerHTML='First step : flip the cards and learn!';
 }
   
 function retournerCarte() 

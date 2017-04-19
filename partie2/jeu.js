@@ -69,28 +69,31 @@ function chargerTableau()
   resultat.verbes.records.forEach(function (verbe) {
       console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
       //alert(verbe[0]);
-      //tableauVerbes[verbe[0]-1] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
-      tableauVerbes[0] = " "+verbe[1] +" "+ verbe[2];
+      //tableauVerbes[] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
+      tableauVerbes[verbe[0]-1] = " "+verbe[1] +" "+ verbe[2];
       //alert(tableauVerbes[0]);
   });
 });
+    
+
+}
+
+function chargerQuestions()
+{
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
 for(var i =0; i<10;i++)
    {
         tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
    }
-}
 
-function test()
-{
-alert(tableauVerbes[0]);
+
 }
 
 window.onload = function() 
 {
 //ajaxGet();
 chargerTableau();
-setTimeout(test,1000);
+setTimeout(chargerQuestions,1000);
 
 /*ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function (reponse) 
 {
