@@ -8,6 +8,8 @@ var tableauQuestions = ["prop1t", true, "prop2f", false,"prop3t", true, "prop4f"
 //var tableauPositionsQuestions = new Array;
 var tableauPositionsQuestions=[14,68,62,33,99,6,35,4,41,0];
 var tableauVaisseauxDisparus = [];
+var tableauQuestionsAPoser = [];
+var tableauVerbes = [];
 var position=0;
 var nbQuestions = 4;
 var pause = false;
@@ -38,8 +40,66 @@ function addEvent(obj,event,fct)
                 obj.addEventListener(event,fct,true);
 }
 
+
+
+function ajaxGet(url, callback) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url);
+    req.addEventListener("load", function () {
+        if (req.status >= 200 && req.status < 400) {
+            // Appelle la fonction callback en lui passant la réponse de la requête
+            callback(req.responseText);
+        } else {
+            console.error(req.status + " " + req.statusText + " " + url);
+        }
+    });
+    req.addEventListener("error", function () {
+        console.error("Erreur réseau avec l'URL " + url);
+    });
+    req.send(null);
+    //alert(resultat.verbes.records.length);
+}
+
+
+
+function chargerTableau()
+{
+    ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function(reponse) {
+  var resultat = JSON.parse(reponse);
+  resultat.verbes.records.forEach(function (verbe) {
+      console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
+      //alert(verbe[0]);
+      //tableauVerbes[verbe[0]-1] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
+      tableauVerbes[0] = " "+verbe[1] +" "+ verbe[2];
+      //alert(tableauVerbes[0]);
+  });
+});
+    //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
+for(var i =0; i<10;i++)
+   {
+        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
+   }
+}
+
+function test()
+{
+alert(tableauVerbes[0]);
+}
+
 window.onload = function() 
 {
+//ajaxGet();
+chargerTableau();
+setTimeout(test,1000);
+
+/*ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function (reponse) 
+{
+    // Transforme la réponse en tableau d'objets JavaScript
+    var verbes = JSON.parse(reponse);
+    console.log(verbes.verbes);
+});*/
+
+
    //déclaration des éléments HTML
    //tableau = document.getElementById('tableau');
    boutonCommencer = document.getElementById('boutonCommencer');
