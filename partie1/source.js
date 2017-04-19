@@ -71,10 +71,8 @@ for(var i =0; i<10;i++)
         //alert(tableauQuestionsAPoser[i]);
         //alert(tableauVerbes[tableauQuestionsAPoser[i]*2]);
         tableauCartes[2*i] = tableauVerbes[tableauQuestionsAPoser[i]*2];
-        tableauCartes[2*i+1] = tableauVerbes[tableauQuestionsAPoser[i]*2+1];
-        
+        tableauCartes[2*i+1] = tableauVerbes[tableauQuestionsAPoser[i]*2+1];    
    }
-
 }
 
   

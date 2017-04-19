@@ -9,7 +9,7 @@ var tableauQuestions = ["prop1t", true, "prop2f", false,"prop3t", true, "prop4f"
 var tableauPositionsQuestions=[14,68,62,33,99,6,35,4,41,0];
 var tableauVaisseauxDisparus = [];
 var tableauQuestionsAPoser = [];
-var tableauVerbes = [];
+var tableau48Questions = [];
 var position=0;
 var nbQuestions = 4;
 var pause = false;
@@ -20,13 +20,12 @@ var sonExplosion = new Audio('./sonExplosion.mp3');
 
 
 /* TODO :
-gérer le fait qu'il y ait parfois moins de quatre prop
-gérer dix proposition sur trois lignes
+DONE gérer dix proposition sur trois lignes
 fonction tirer() :
-    mettre un faisceau laser
-    obtenir la proposition tirée
-    envoyer le résultat à la fonction vérifierReponse()
-    faire disparaître la case si c'est bien une fausse prop
+DONE    mettre un faisceau laser
+DONE    obtenir la proposition tirée
+DONE    envoyer le résultat à la fonction vérifierReponse()
+DONE    faire disparaître la case si c'est bien une fausse prop
     faire apparaître une perte de points sinon
 mettre des vaisseaux à la place des boutons
 jauge de PV/score ?
@@ -64,18 +63,20 @@ function ajaxGet(url, callback) {
 
 function chargerTableau()
 {
-    ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function(reponse) {
+  //setTimeout(chargerQuestions,1000);
+  ajaxGet("https://easimprove.herokuapp.com/api.php/jeutir", function(reponse) {
   var resultat = JSON.parse(reponse);
-  resultat.verbes.records.forEach(function (verbe) {
-      console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
+  resultat.jeutir.records.forEach(function (prop) {
+      //console.log(prop[0], prop[1], prop[2]);
       //alert(verbe[0]);
+      //alert((verbe[0]-1)*2);
       //tableauVerbes[] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
-      tableauVerbes[verbe[0]-1] = " "+verbe[1] +" "+ verbe[2];
-      //alert(tableauVerbes[0]);
+      tableau48Questions[(prop[0]-1)*2] = ""+prop[1];
+      tableau48Questions[(prop[0]-1)*2+1] = ""+prop[2];
+      //alert(tableauVerbes[(verbe[0]-1)*2]);
   });
 });
-    
-
+  //chargerQuestions();
 }
 
 function chargerQuestions()
@@ -83,10 +84,23 @@ function chargerQuestions()
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
 for(var i =0; i<10;i++)
    {
-        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
+        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
+
+        //alert(tableauQuestionsAPoser[i]);
+        //alert(tableauVerbes[tableauQuestionsAPoser[i]*2]);
+        tableauQuestions[2*i] = tableau48Questions[tableauQuestionsAPoser[i]*2];
+        tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
    }
+console.log(tableauQuestionsAPoser);
+console.log(tableauQuestions);
 
-
+//initialisation du nombre de vaisseaux à détruire
+   for(var i = 0; i<10;i++)
+   {
+        if (tableauQuestions[i*2+1] == "F")
+        nbVaisseauxADetruire++;
+   }
+   console.log(nbVaisseauxADetruire);
 }
 
 window.onload = function() 
@@ -152,12 +166,6 @@ setTimeout(chargerQuestions,1000);
    canvasProp9.hidden=true;
    canvasProp10.hidden=true;
 
-   //initialisation du nombre de vaisseaux à détruire
-   for(var i = 0; i<10;i++)
-   {
-        if (tableauQuestions[i*2+1]==false)
-        nbVaisseauxADetruire++;
-   }
    
 }
   
@@ -185,7 +193,7 @@ function lancerLaser(event)
         {
         ctx2.moveTo(position,tableauPositionsQuestions[lieuDuTir]+20);
         ctx2.lineTo(position,358);
-            if(tableauQuestions[lieuDuTir*2+1])//ne doit pas disparaître
+            if(tableauQuestions[lieuDuTir*2+1]=="T")//ne doit pas disparaître
             {
                  //perdre des points
             }
