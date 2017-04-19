@@ -26,7 +26,9 @@ var tableauCartes = [
   var scoreEtape3 = 0;
   var jeuEnCours = 1;
   var espaceScore = document.getElementById('espaceScore');
-  
+
+//TODO : on ne voit tjrs pas la réponse à la dernière question !!
+
 function ajaxGet(url, callback) {
     var req = new XMLHttpRequest();
     req.open("GET", url);

@@ -40,7 +40,6 @@ function addEvent(obj,event,fct)
 }
 
 
-
 function ajaxGet(url, callback) {
     var req = new XMLHttpRequest();
     req.open("GET", url);
@@ -63,31 +62,36 @@ function ajaxGet(url, callback) {
 
 function chargerTableau()
 {
-  //setTimeout(chargerQuestions,1000);
   ajaxGet("https://easimprove.herokuapp.com/api.php/jeutir", function(reponse) {
-  var resultat = JSON.parse(reponse);
-  resultat.jeutir.records.forEach(function (prop) {
-      //console.log(prop[0], prop[1], prop[2]);
-      //alert(verbe[0]);
-      //alert((verbe[0]-1)*2);
-      //tableauVerbes[] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
-      tableau48Questions[(prop[0]-1)*2] = ""+prop[1];
-      tableau48Questions[(prop[0]-1)*2+1] = ""+prop[2];
-      //alert(tableauVerbes[(verbe[0]-1)*2]);
+    var resultat = JSON.parse(reponse);
+    resultat.jeutir.records.forEach(function (prop) {
+    tableau48Questions[(prop[0]-1)*2] = ""+prop[1];
+    tableau48Questions[(prop[0]-1)*2+1] = ""+prop[2];
   });
 });
-  //chargerQuestions();
 }
 
 function chargerQuestions()
 {
+    var questionDejeAttribuee = false;
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
 for(var i =0; i<10;i++)
    {
-        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
-
-        //alert(tableauQuestionsAPoser[i]);
-        //alert(tableauVerbes[tableauQuestionsAPoser[i]*2]);
+       questionDejeAttribuee = false;
+        do
+        {
+            tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
+            //alert(tableauQuestionsAPoser[i]+" "+i);
+            for (var j=0; j<i; j++)
+            {
+                //alert("j="+j);
+                if(tableauQuestionsAPoser[i]==tableauQuestionsAPoser[j])
+               {questionDejeAttribuee = true;} 
+            }
+            console.log(tableauQuestionsAPoser[i]);
+        }
+        while(questionDejeAttribuee);
+        //tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
         tableauQuestions[2*i] = tableau48Questions[tableauQuestionsAPoser[i]*2];
         tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
    }
@@ -165,8 +169,6 @@ setTimeout(chargerQuestions,1000);
    canvasProp8.hidden=true;
    canvasProp9.hidden=true;
    canvasProp10.hidden=true;
-
-   
 }
   
 
