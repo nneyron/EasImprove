@@ -1,55 +1,48 @@
-body {
-color:black;
-background-color:darkblue;
-background-image:url(./cosmos.jpg);
+/* stylePartie2.css */
+
+body 
+{
+    color:black;
+    background-color:darkblue;
+    background-image:url(./cosmos.jpg);
 }
 
-/*#tableau {
-border:none;
-text-align:center;
-border-spacing:8px;
-}
-
-td{
-   border:none;
-   border-radius:8%;
-   background-image:url(./vaisseauAlien.png);
-   background-repeat:no-repeat;
-   background-position-x: center;
-   vertical-align: bottom;
-}*/
-
-#boutonCommencer{
+#boutonCommencer
+{
     background-color: white;
     border: none;
     color: black;
     width : 200px;
     height : 100px;
     text-align: center;
-   font-size: 16px;
+    font-size: 16px;
     border-radius : 5%;
-   position:relative;
-   top:300px;
-   left:40%;
+    position:relative;
+    top:30%;
+    left:40%;
 }
 
-#test,#test2{
-   color:white;
+
+/* Gestion des canvas superposés */
+#canvases 
+{ 
+    position:relative; 
+    width:1260px; 
+    height:800px 
 }
 
- /* Set to the same width/height as the canvases */
-#canvases { position:relative; width:1200px; height:800px }
-
-.canvases2 {
-position:absolute;
-top:0; left:0;  
-width: 1200px;
-height: 800px;
+.canvases2 
+{
+    position:absolute;
+    top:0; left:0;  
+    width: 1260px;
+    height: 800px;
 }
 
-#canvas{
-position:absolute;
-top:0; left:0;  
-width: 1200px;
-height: 800px;
+#canvas
+{
+    position:absolute;
+    top:0; left:0;  
+    width: 1260px;
+    height: 800px;
 }

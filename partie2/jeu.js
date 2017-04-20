@@ -1,23 +1,29 @@
+// jeu.js
+
+//DECLARATION DES VARIABLES
+//Images et sons
 var vaisseau = new Image();
 vaisseau.src = "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png";
 var vaisseauAlien = new Image();
 vaisseauAlien.src = "./vaisseauAlien_petit.png";
 var explosion = new Image();
 explosion.src = "./giphy.gif";
-var tableauQuestions = ["prop1t", true, "prop2f", false,"prop3t", true, "prop4f", false,"prop5t", true, "prop6f", false,"prop7t", true, "prop8f", false, "prop9", true, "prop10", false];
-//var tableauPositionsQuestions = new Array;
-var tableauPositionsQuestions=[14,68,62,33,99,6,35,4,41,0];
-var tableauVaisseauxDisparus = [];
-var tableauQuestionsAPoser = [];
-var tableau48Questions = [];
-var position=0;
-var nbQuestions = 4;
-var pause = false;
-var nbVaisseauxADetruire=0;
-var fini = false;
 var sonTir = new Audio('./sonTir.mp3');
 var sonExplosion = new Audio('./sonExplosion.mp3');
 
+//Tableaux pour les propositions
+var tableauQuestions = []; //tableau qui contiendra les dix propositions et les dix booléens associés
+var tableauPositionsQuestions=[]; //tableau qui contiendra les hauteurs des vaisseaux ennemis
+var tableauVaisseauxDisparus = []; //tableau à remplir au fur et à mesure des explosions
+var tableauQuestionsAPoser = []; //tableau qui permettra de gérer les propositions sélectionnées dans le tableau suivant
+var tableau48Questions = []; //tableau qui regroupe toutes les questions possibles et le booléen associé
+
+
+var score = 0;
+var position=0; 
+var nbVaisseauxADetruire=0;
+var fini = false;
+var timer;
 
 /* TODO :
 DONE gérer dix proposition sur trois lignes
@@ -29,8 +35,11 @@ DONE    faire disparaître la case si c'est bien une fausse prop
     faire apparaître une perte de points sinon
 mettre des vaisseaux à la place des boutons
 jauge de PV/score ?
+nettoyer et commenter le code
 */
 
+
+//Fonction générique d'ajout d'événement, sert pour onclick et onmousemove
 function addEvent(obj,event,fct)
 {
         if( obj.attachEvent)
@@ -40,14 +49,19 @@ function addEvent(obj,event,fct)
 }
 
 
-function ajaxGet(url, callback) {
+//Fonction générale de gestion de l'API pour récupérer les données
+function ajaxGet(url, callback) 
+{
     var req = new XMLHttpRequest();
     req.open("GET", url);
     req.addEventListener("load", function () {
-        if (req.status >= 200 && req.status < 400) {
+        if (req.status >= 200 && req.status < 400) 
+        {
             // Appelle la fonction callback en lui passant la réponse de la requête
             callback(req.responseText);
-        } else {
+        } 
+        else 
+        {
             console.error(req.status + " " + req.statusText + " " + url);
         }
     });
@@ -55,172 +69,287 @@ function ajaxGet(url, callback) {
         console.error("Erreur réseau avec l'URL " + url);
     });
     req.send(null);
-    //alert(resultat.verbes.records.length);
 }
 
 
+//Fonction onload : affichage, initialisation
+window.onload = function() 
+{
+    chargerTableau();
+    setTimeout(chargerQuestions,1000);
 
+    //déclaration des éléments HTML
+    //tableau = document.getElementById('tableau');
+    boutonCommencer = document.getElementById('boutonCommencer');
+    boutonRejouer = document.getElementById('boutonRejouer');
+
+    //canvas
+    canvas = document.getElementById('canvas');
+    canvasLaser = document.getElementById('canvasLaser');
+    canvasProp1 = document.getElementById('canvasProp1');
+    canvasProp2 = document.getElementById('canvasProp2');
+    canvasProp3 = document.getElementById('canvasProp3');
+    canvasProp4 = document.getElementById('canvasProp4');
+    canvasProp5 = document.getElementById('canvasProp5');
+    canvasProp6 = document.getElementById('canvasProp6');
+    canvasProp7 = document.getElementById('canvasProp7');
+    canvasProp8 = document.getElementById('canvasProp8');
+    canvasProp9 = document.getElementById('canvasProp9');
+    canvasProp10 = document.getElementById('canvasProp10');
+    
+    //contextes
+    ctx = canvas.getContext('2d'); 
+    ctx2 = canvasLaser.getContext('2d'); 
+    ctxProp1 = canvasProp1.getContext('2d');
+    ctxProp2 = canvasProp2.getContext('2d');
+    ctxProp3 = canvasProp3.getContext('2d');
+    ctxProp4 = canvasProp4.getContext('2d');
+    ctxProp5 = canvasProp5.getContext('2d');
+    ctxProp6 = canvasProp6.getContext('2d');
+    ctxProp7 = canvasProp7.getContext('2d');
+    ctxProp8 = canvasProp8.getContext('2d');
+    ctxProp9 = canvasProp9.getContext('2d');
+    ctxProp10 = canvasProp10.getContext('2d');
+
+    addEvent(window,"mousemove",bougerFusee); //permet de déplacer la fusée en même temps que la souris
+    addEvent(window,"click",lancerLaser); //permet de tirer un faisceau laser au click
+
+    //affichage avant l'appui sur Start : le seul bouton visible est "Start"
+    canvas.hidden =true;
+    canvasLaser.hidden=true;
+    canvasProp1.hidden=true;
+    canvasProp2.hidden=true;
+    canvasProp3.hidden=true;
+    canvasProp4.hidden=true;
+    canvasProp5.hidden=true;
+    canvasProp6.hidden=true;
+    canvasProp7.hidden=true;
+    canvasProp8.hidden=true;
+    canvasProp9.hidden=true;
+    canvasProp10.hidden=true;
+    boutonRejouer.hidden=true;
+}
+
+
+//Fonction qui remplit le tableau des questions grâce à l'URL de l'API
 function chargerTableau()
 {
   ajaxGet("https://easimprove.herokuapp.com/api.php/jeutir", function(reponse) {
     var resultat = JSON.parse(reponse);
     resultat.jeutir.records.forEach(function (prop) {
-    tableau48Questions[(prop[0]-1)*2] = ""+prop[1];
-    tableau48Questions[(prop[0]-1)*2+1] = ""+prop[2];
+
+        //les cases paires du tableau contiennent une proposition
+        tableau48Questions[(prop[0]-1)*2] = ""+prop[1];
+
+        //les cases impaires contiennent le booléen associé à la proposition précédente
+        tableau48Questions[(prop[0]-1)*2+1] = ""+prop[2];
   });
-});
+ });
 }
 
+
+//Fonction qui détermine les dix questions à poser et le nombre de fausses réponses
 function chargerQuestions()
 {
-    var questionDejeAttribuee = false;
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
-for(var i =0; i<10;i++)
-   {
-       questionDejeAttribuee = false;
-        do
-        {
-            tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
-            //alert(tableauQuestionsAPoser[i]+" "+i);
-            for (var j=0; j<i; j++)
+    var questionDejeAttribuee = false;
+
+    for(var i =0; i<10;i++)
+    {
+        /*questionDejeAttribuee = false;
+            do
             {
-                //alert("j="+j);
-                if(tableauQuestionsAPoser[i]==tableauQuestionsAPoser[j])
-               {questionDejeAttribuee = true;} 
+                tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
+                alert(tableauQuestionsAPoser[i]+" "+i);
+                for (var j=0; j<i; j++)
+                {
+                    alert("j="+j);
+                    if(tableauQuestionsAPoser[i]==tableauQuestionsAPoser[j])
+                {questionDejeAttribuee = true;} 
+                }
+                console.log(tableauQuestionsAPoser[i]);
             }
-            console.log(tableauQuestionsAPoser[i]);
-        }
-        while(questionDejeAttribuee);
-        //tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
-        tableauQuestions[2*i] = tableau48Questions[tableauQuestionsAPoser[i]*2];
-        tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
-   }
-console.log(tableauQuestionsAPoser);
-console.log(tableauQuestions);
+            while(questionDejeAttribuee);*/
+            tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
+            tableauQuestions[2*i] = tableau48Questions[tableauQuestionsAPoser[i]*2];
+            tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
+    }
 
-//initialisation du nombre de vaisseaux à détruire
-   for(var i = 0; i<10;i++)
-   {
-        if (tableauQuestions[i*2+1] == "F")
-        nbVaisseauxADetruire++;
-   }
-   console.log(nbVaisseauxADetruire);
+    console.log(tableauQuestionsAPoser);
+    console.log(tableauQuestions);
+
+    //initialisation du nombre de vaisseaux à détruire
+    for(var i = 0; i<10;i++)
+    {
+            if (tableauQuestions[i*2+1] == "F")
+            nbVaisseauxADetruire++;
+    }
+    console.log(nbVaisseauxADetruire);
 }
 
-window.onload = function() 
+
+//Fonction d'initialisation qui gère l'affichage des propositions après appui sur Start
+//Appelé par le click sur le bouton Start
+function initialiserPartie()
 {
-//ajaxGet();
-chargerTableau();
-setTimeout(chargerQuestions,1000);
+    score = 0;
+    timer = setInterval(augmenterTemps,1000);
 
-/*ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function (reponse) 
-{
-    // Transforme la réponse en tableau d'objets JavaScript
-    var verbes = JSON.parse(reponse);
-    console.log(verbes.verbes);
-});*/
+    //affichage et masquage des éléments HTML
+    boutonRejouer.hidden = true;
+    boutonCommencer.hidden=true;
+    canvas.hidden = false;
+    canvasLaser.hidden = false;
+    canvasProp1.hidden=false;
+    canvasProp2.hidden=false;
+    canvasProp3.hidden=false;
+    canvasProp4.hidden=false;
+    canvasProp5.hidden=false;
+    canvasProp6.hidden=false;
+    canvasProp7.hidden=false;
+    canvasProp8.hidden=false;
+    canvasProp9.hidden=false;
+    canvasProp10.hidden=false;
+    
 
+    //remplir tableauPositionsQuestions avec la hauteur à laquelle sera
+    //affichée chaque proposition
+    for(var i =0; i<10;i++)
+    {
+            tableauPositionsQuestions[i] = Math.floor(Math.random() * (200));
+    }
 
-   //déclaration des éléments HTML
-   //tableau = document.getElementById('tableau');
-   boutonCommencer = document.getElementById('boutonCommencer');
+    var nomContexte;
 
-   //canvas
-   canvas = document.getElementById('canvas');
-   canvasLaser = document.getElementById('canvasLaser');
-   canvasProp1 = document.getElementById('canvasProp1');
-   canvasProp2 = document.getElementById('canvasProp2');
-   canvasProp3 = document.getElementById('canvasProp3');
-   canvasProp4 = document.getElementById('canvasProp4');
-   canvasProp5 = document.getElementById('canvasProp5');
-   canvasProp6 = document.getElementById('canvasProp6');
-   canvasProp7 = document.getElementById('canvasProp7');
-   canvasProp8 = document.getElementById('canvasProp8');
-   canvasProp9 = document.getElementById('canvasProp9');
-   canvasProp10 = document.getElementById('canvasProp10');
-   
-   //contextes
-   ctx = canvas.getContext('2d'); 
-   ctx2 = canvasLaser.getContext('2d'); 
-   ctxProp1 = canvasProp1.getContext('2d');
-   ctxProp2 = canvasProp2.getContext('2d');
-   ctxProp3 = canvasProp3.getContext('2d');
-   ctxProp4 = canvasProp4.getContext('2d');
-   ctxProp5 = canvasProp5.getContext('2d');
-   ctxProp6 = canvasProp6.getContext('2d');
-   ctxProp7 = canvasProp7.getContext('2d');
-   ctxProp8 = canvasProp8.getContext('2d');
-   ctxProp9 = canvasProp9.getContext('2d');
-   ctxProp10 = canvasProp10.getContext('2d');
-   //ctx.drawImage(vaisseau, position, 200,75,100);
-   addEvent(window,"mousemove",bougerFusee);
-   addEvent(window,"click",lancerLaser);
-   //affichage avant le début
-   //tableau.hidden = true;
-   canvas.hidden =true;
-   canvasLaser.hidden=true;
-   canvasProp1.hidden=true;
-   canvasProp2.hidden=true;
-   canvasProp3.hidden=true;
-   canvasProp4.hidden=true;
-   canvasProp5.hidden=true;
-   canvasProp6.hidden=true;
-   canvasProp7.hidden=true;
-   canvasProp8.hidden=true;
-   canvasProp9.hidden=true;
-   canvasProp10.hidden=true;
+    for(var i =0; i<10;i++)
+    {
+            //on récupère le contexte du canvas associé à la (i+1)è question
+            nomContexte="ctxProp"+(i+1);
+
+            //et on ajoute le vaisseau ennemi et la proposition
+            window[nomContexte].drawImage(vaisseauAlien, 120*i+60,tableauPositionsQuestions[i],50,50);
+            window[nomContexte].font="10px Arial";
+            window[nomContexte].fillStyle = "white";
+            window[nomContexte].textAlign = "center";
+            window[nomContexte].fillText(tableauQuestions[i*2],120*i+85,tableauPositionsQuestions[i]+55,120);
+    }
 }
-  
 
+
+//Fonction qui déplace la fusée (onmousemove event)
+function bougerFusee(event)
+{  
+    //déplacer la fusée selon les coordonnées en y de la souris
+    position=event.offsetX-65;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(vaisseau, position, 350,120,160);
+    ctx.fillStyle = "white";
+    ctx.font="30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Score : "+score,canvas.width*3/4,canvas.height/2+50);
+}
+
+
+//Fonction qui lance le laser (onclick event)
 function lancerLaser(event)
 { 
-    var vaisseauDejaDisparu = false;
-    position=event.clientX-7;
-    var distanceAuVaisseau = (position)%120;//reste
-    var lieuDuTir = Math.floor((position)/120); 
-    //alert(distanceAuVaisseau+"  "+lieuDuTir);
-    if(boutonCommencer.hidden)   
+    //Récupération de la position de la souris (clientX ne fonctionne pas si on scrolle)
+    position=event.offsetX-7;
+    var vaisseauDejaDisparu = false; //permettra de ne tirer que sur les vaisseaux qui sont encore là
+    var distanceAuVaisseau = (position)%120; //reste pour savoir si on est sur un vaisseau ou dans le vide
+    var lieuDuTir = Math.floor((position)/120); //identifie la prop concernée
+
+    //Ne pas tirer si le jeu n'a pas commencé ou est fini
+    if(boutonCommencer.hidden && !fini)   
     {
         sonTir.play();
+
+        //afficher le faisceau une demie seconde
         setTimeout(supprimerLaser,500);
-        //position=event.clientX-7;
         ctx2.lineWidth=5;
         ctx2.beginPath();
+
+        //on vérifie si le vaisseau a déjà été éliminé
         for(var i = 0; i<tableauVaisseauxDisparus.length;i++)
         {
             if(tableauVaisseauxDisparus[i]==lieuDuTir)
             vaisseauDejaDisparu = true;
         }
-        if(distanceAuVaisseau<=50 && vaisseauDejaDisparu==false) //tir sur un vaisseau
+
+        //tir sur un vaisseau
+        if(distanceAuVaisseau>=60 && distanceAuVaisseau<=110 && vaisseauDejaDisparu==false) 
         {
         ctx2.moveTo(position,tableauPositionsQuestions[lieuDuTir]+20);
         ctx2.lineTo(position,358);
             if(tableauQuestions[lieuDuTir*2+1]=="T")//ne doit pas disparaître
             {
                  //perdre des points
+                score -= 2 ;
+                ctx2.fillStyle = "white";
+                ctx2.font="30px Arial";
+                ctx2.textAlign = "center";
+                ctx2.fillText("-2",120*(lieuDuTir)+115,tableauPositionsQuestions[lieuDuTir]);
             }
             else
             {
                 detruireVaisseauAlien(lieuDuTir+1);
             }
         }
-        else //tir dans le vide
+
+        //tir dans le vide
+        else 
         {
             ctx2.moveTo(position,0);
             ctx2.lineTo(position,358);
         }
+
+        //tracer le trait du faisceau laser
         ctx2.strokeStyle='white'; 
         ctx2.stroke(); 
     }
 }
 
+
+//Fonction qui efface le laser et réaffiche le message de fin une fois le dernier laser effacé
+function supprimerLaser()
+{
+    ctx2.clearRect(0, 0, canvasLaser.width, canvasLaser.height);
+    if(fini)
+    {
+        ctx2.fillStyle = "white";
+        ctx2.font="100px Arial";
+        ctx2.textAlign = "center";
+        ctx2.fillText("Finished!",canvas.width/2,canvas.height/2);
+        ctx2.font="50px Arial";
+        ctx2.fillText("You scored "+score,canvas.width/4,canvas.height/2+100);
+    }  
+}
+
+function supprimeImageBombe(nomContexte)
+{
+    window[nomContexte].clearRect(0, 0, 1260, 800);
+}
+
+
+//Fonction qui détruit le vaisseau sur lequel on a tiré
 function detruireVaisseauAlien(lieuDuTir)
 {
+    score += 6;
     var nomContexte = "ctxProp"+lieuDuTir;
     sonExplosion.play();
-    window[nomContexte].clearRect(0, 0, 1200, 800);
+
+    //on fait disparaître le vaisseau ennemi
+    window[nomContexte].clearRect(0, 0, 1260, 800);
     tableauVaisseauxDisparus[tableauVaisseauxDisparus.length]=(lieuDuTir-1);
-    window[nomContexte].drawImage(explosion, 120*(lieuDuTir-1),tableauPositionsQuestions[lieuDuTir-1],80,80);
+    window[nomContexte].drawImage(explosion, 120*(lieuDuTir-1)+60,tableauPositionsQuestions[lieuDuTir-1],80,80);
+    window[nomContexte].fillStyle = "white";
+    window[nomContexte].font="30px Arial";
+    window[nomContexte].textAlign = "center";
+    window[nomContexte].fillText("+5",120*(lieuDuTir-1)+110,tableauPositionsQuestions[lieuDuTir-1]+40);
+
+    setTimeout(function() {supprimeImageBombe(nomContexte);},500);
+
+    //si c'était le dernier vaisseau à détruire, c'est terminé
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
     {
         terminer();
@@ -228,6 +357,7 @@ function detruireVaisseauAlien(lieuDuTir)
 }
 
 
+//Fonction qui empêche de tirer et affiche le msg de fin
 function terminer()
 {
     canvas.hidden=true;
@@ -236,106 +366,47 @@ function terminer()
     ctx2.fillStyle = "white";
     ctx2.textAlign = "center";
     ctx2.fillText("Finished!",canvas.width/2,canvas.height/2);
+    boutonRejouer.hidden = false;
 }
 
-function supprimerLaser()
+
+function augmenterTemps()
 {
-     ctx2.clearRect(0, 0, canvasLaser.width, canvasLaser.height);
-     if(fini)
+    if(!fini)
+        score--;
+    else
+        clearInterval(timer);
+}
+
+
+function rejouer()
+{    
+    tableauQuestions = []; 
+    tableauPositionsQuestions=[]; 
+    tableauVaisseauxDisparus = []; 
+    tableauQuestionsAPoser = [];
+
+    score = 0;
+    position=0; 
+    nbVaisseauxADetruire=0;
+
+    viderCanvas();
+    setTimeout(chargerQuestions,50);
+    setTimeout(initialiserPartie,100);
+    fini = false;
+    canvas.hidden=false;
+    //chargerQuestions();
+    //initialiserPartie();
+   console.log(tableauQuestions);
+}
+
+function viderCanvas()
+{
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i=1; i<=10;i++)
     {
-        ctx2.fillStyle = "white";
-        ctx2.font="100px Arial";
-        ctx2.textAlign = "center";
-        ctx2.fillText("Finished!",canvas.width/2,canvas.height/2);
-    }  
+        nomContexte="ctxProp"+(i);
+        window[nomContexte].clearRect(0, 0, canvas.width, canvas.height);
+    }
 }
-
-function bougerFusee(event)
-{  
-   //déplacer la fusée selon les coordonnées en y de la souris
-   position=event.clientX-65;
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   ctx.drawImage(vaisseau, position, 350,120,160);
-}
-
- 
-function initialiserPartie()
-{
-   //affichage
-   boutonCommencer.hidden=true;
-   //tableau.hidden = false;
-   canvas.hidden = false;
-   canvasLaser.hidden = false;
-   canvasProp1.hidden=false;
-   canvasProp2.hidden=false;
-   canvasProp3.hidden=false;
-   canvasProp4.hidden=false;
-   canvasProp5.hidden=false;
-   canvasProp6.hidden=false;
-   canvasProp7.hidden=false;
-   canvasProp8.hidden=false;
-   canvasProp9.hidden=false;
-   canvasProp10.hidden=false;
-   
-
-   //remplir tableauPositionsQuestions
-for(var i =0; i<10;i++)
-   {
-        tableauPositionsQuestions[i] = Math.floor(Math.random() * (140));
-   }
-
-
-
-   var nomContexte;
-   //window[nomContexte].drawImage(vaisseauAlien, 120, 50,50,50);
-
-   for(var i =0; i<10;i++)
-   {
-        nomContexte="ctxProp"+(i+1);
-        window[nomContexte].drawImage(vaisseauAlien, 120*i,tableauPositionsQuestions[i],50,50);
-        window[nomContexte].fillStyle = "white";
-        window[nomContexte].textAlign = "center";
-        window[nomContexte].fillText(tableauQuestions[i*2],120*i+25,tableauPositionsQuestions[i]+55);
-   }
-
-   //gestion des mots sur lesquels tirer
-   //on crée un tableau de vingt cases, {"prop1",false,...}
-   /*
-   var questionDejaAttribuee = false;
-   var questionAttribueeMax=0;
-   var rnd = 0;
-   for (var i = 0; i<nbQuestions ; i++)
-      {
-         do
-	         {
-               questionDejaAttribuee = false;
-            	rnd = Math.floor(Math.random() * (10));
-              if(questionAttribueeMax!=0)
-               {
-         			for (var j =0;j<questionAttribueeMax-1;j++)
-                  {
-                     if(tableauPropositions[j*3].substr(4)==rnd)
-                     {questionDejaAttribuee = true;}
-                  }
-               }
-               
-               if(!questionDejaAttribuee)
-                  {
-               		tableauPropositions[i*3]=("case"+rnd);
-               		tableauPropositions[i*3+1]=tableauQuestions[rnd*2];
-               		tableauPropositions[i*3+2]=tableauQuestions[rnd*2+1];
-                     questionAttribueeMax++;
-                  }
-            }
-         while(questionDejaAttribuee);        
-         
-      }
-   for (var k =0; k<nbQuestions; k++)
-            {
-               document.getElementById(tableauPropositions[k*3]).innerHTML = tableauPropositions[k*3+1];
-               document.getElementById(tableauPropositions[k*3]).style="color:white"; 
-               document.getElementById(tableauPropositions[k*3]).style.backgroundImage="url(./vaisseauAlien_petit.png)"; 
-            }*/
-}
-
 
