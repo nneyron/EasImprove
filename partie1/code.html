@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8"/> 
-<link rel="stylesheet" style="text/css" href="testCSS.css" />
+<link rel="stylesheet" style="text/css" href="CSSpartie1.css" />
 <title> Eas'Improve </title>
 
 <script type="text/javascript" src="source.js">
@@ -10,41 +10,44 @@
 
 
 <body onload="afficherCarte()">
+</br>
 <p id=nomEtape></p>
 <p id=espaceConsigne></p>
 <p id=numQuestion></p>
-<p id="espaceReponse"></p> 
-<p id="espaceScore"></p>
-  
+<p id="espaceReponse" style="position:absolute; top:430px;"></p> 
+<p id="espaceScore" style="position:absolute; top:460px;"></p>
+
+
+ <!--Tableau pour le memory--> 
 <p>
 <TABLE id=tableau width=60% border=1>
 <TR>
-<TD id=case1 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case2 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case3 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case4 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case5 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
+<TD id=case1 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case2 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case3 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case4 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case5 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
 </TR>
 <TR>
-<TD id=case6 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case7 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case8 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case9 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case10 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
+<TD id=case6 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case7 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case8 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case9 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case10 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
 </TR>
 <TR>
-<TD id=case11 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case12 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case13 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case14 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case15 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
+<TD id=case11 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case12 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case13 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case14 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case15 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
 </TR>
 <TR>
-<TD id=case16 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case17 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case18 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case19 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
-<TD id=case20 width=20% onmouseover="" style="cursor: pointer;" onclick="test(this)"></TD>
+<TD id=case16 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case17 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case18 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case19 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
+<TD id=case20 width=20% onmouseover="" style="cursor: pointer;" onclick="verifierCaseCliquee(this)"></TD>
 </TR>
 </TABLE>
 </p>
@@ -60,9 +63,10 @@
 <input type="button" id="boutonEtape2" title="Start the next step" value="Step 2" onclick="chargerEtape2()"></input>
 </p>
 
-<p id=groupeEtape3>
+<p id=groupeEtape3 style="position:absolute; top:400px ;">
 Enter your translation: 
-<input type="text" id="caseARemplir"></input>
+<input type="text" id="caseARemplir" ></input>
 <input type="submit" id=boutonValider value="Submit" onclick="verifierReponse()">
+<input type="button" id=boutonFin value="Quit" onclick="terminer()">
 </p>
 </body> 

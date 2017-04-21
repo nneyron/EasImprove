@@ -1,34 +1,14 @@
-var tableauCartes = [
-"question1", 
-"reponse1",
-"question2", 
-"reponse2",
-  "question3",
-  "reponse3",
-  "question4",
-  "reponse4",
-  "question5",
-  "reponse5",
-  "question6",
-  "reponse6",
-  "question7",
-  "reponse7",
-  "question8",
-  "reponse8",
-  "question9", 
-  "reponse9",
-  "question10",
-  "reponse10"
-]; //code de récupération des données pour remplir le tableau
+// source.js : code Flashcards (Eas'improve partie 1)
+
   var tableauQuestionsAPoser = [];
-  var tableauVerbes = [];
+  var tableauVerbes = []; //toutes les paires possibles
+  var tableauCartes = []; //les dix paires qui seront dans l'exercice
   var scoreEtape2 = 0; //à merger avec score !!
   var scoreEtape3 = 0;
   var jeuEnCours = 1;
-  var espaceScore = document.getElementById('espaceScore');
 
-//TODO : on ne voit tjrs pas la réponse à la dernière question !!
 
+//Fonction de récupération des données de l'API
 function ajaxGet(url, callback) {
     var req = new XMLHttpRequest();
     req.open("GET", url);
@@ -46,6 +26,31 @@ function ajaxGet(url, callback) {
     req.send(null);
 }
 
+
+window.onload = function() 
+{
+    var espaceScore = document.getElementById('espaceScore');
+    var espaceReponse = document.getElementById('espaceReponse');
+    var espaceConsigne = document.getElementById('espaceConsigne');
+
+    var boutonFin = document.getElementById('boutonFin');
+    var boutonEtape2 = document.getElementById('boutonEtape2');
+    var boutonEtape3 = document.getElementById('boutonEtape3');
+    var boutonCarte = document.getElementById('boutonCarte');
+    var boutonQuestionSuivante = document.getElementById('boutonQuestionSuivante');
+    var boutonValider = document.getElementById('boutonValider');
+
+    var tableau = document.getElementById('tableau');
+    var groupeEtape3 = document.getElementById('groupeEtape3');
+    var jeNeSaisPas = document.getElementById('jeNeSaisPas');
+    var nomEtape = document.getElementById('nomEtape');
+    var numQuestion = document.getElementById('numQuestion');
+    var carteARemplir = document.getElementById('boutonCarte');
+    var caseARemplir = document.getElementById('caseARemplir');
+}
+
+
+//Fonction qui permet de charger toutes les paires possibles dans tableauVerbes
 function chargerTableau()
 {
   setTimeout(chargerQuestions,1500);
@@ -53,15 +58,10 @@ function chargerTableau()
   var resultat = JSON.parse(reponse);
   resultat.verbes.records.forEach(function (verbe) {
       console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
-      //alert(verbe[0]);
-      //alert((verbe[0]-1)*2);
-      //tableauVerbes[] = [""+verbe[1] + verbe[2], ""+verbe[3], verbe[4]] ;
       tableauVerbes[(verbe[0]-1)*2] = ""+verbe[1] +" "+ verbe[2];
       tableauVerbes[(verbe[0]-1)*2+1] = ""+verbe[3];
-      //alert(tableauVerbes[(verbe[0]-1)*2]);
   });
 });
-  //chargerQuestions();
 }
 
 function chargerQuestions()
@@ -87,13 +87,14 @@ function afficherCarte()
   chargerTableau();
   var carteARemplir = document.getElementById('boutonCarte');
   carteARemplir.value="Start"; 
-  document.getElementById('boutonEtape2').hidden = true;
-  document.getElementById('boutonEtape3').hidden = true;
-  document.getElementById('espaceReponse').hidden = true;
-  document.getElementById('tableau').hidden=true;
-  document.getElementById('groupeEtape3').hidden=true;
-  document.getElementById('jeNeSaisPas').style.visibility='hidden';
-  document.getElementById('nomEtape').innerHTML='First step : flip the cards and learn!';
+  boutonFin.hidden = true;
+  boutonEtape2.hidden = true;
+  boutonEtape3.hidden = true;
+  espaceReponse.hidden = true;
+  tableau.hidden=true;
+  groupeEtape3.hidden=true;
+  jeNeSaisPas.style.visibility='hidden';
+  nomEtape.innerHTML='First step : flip the cards and learn!';
 }
   
 function retournerCarte() 
@@ -104,44 +105,43 @@ function retournerCarte()
     numeroQuestion++;
   }
   else {questionZero=false;}
-  document.getElementById('boutonQuestionSuivante').hidden=false; 
-  document.getElementById('numQuestion').innerHTML='Question '+numeroQuestion;
-  var carteARemplir = document.getElementById('boutonCarte');
+  boutonQuestionSuivante.hidden=false; 
+  numQuestion.innerHTML='Question '+numeroQuestion;
   
   if(carteARemplir.value==tableauCartes[2*numeroQuestion-2])//si la carte affiche la question
   {
     //au clic, on affiche la réponse
     carteARemplir.value=tableauCartes[2*numeroQuestion -1]; 
-    document.getElementById('boutonCarte').style.backgroundColor="#314A5E";
+    boutonCarte.style.backgroundColor="#314A5E";
   }
    
   else //sinon la carte affiche la réponse et au clic on affiche la question
   {
     carteARemplir.value=tableauCartes[2*numeroQuestion-2]; 
-  	document.getElementById('boutonCarte').style.backgroundColor="#47B19B";
+  	boutonCarte.style.backgroundColor="#47B19B";
   }
     
   
   if(jeuEnCours==3)
     {
-      document.getElementById('boutonCarte').style.pointerEvents='none';
-      document.getElementById('jeNeSaisPas').style.visibility='visible';
-      document.getElementById('groupeEtape3').hidden=false;
-      document.getElementById('boutonQuestionSuivante').disabled = false;
-    	document.getElementById('boutonQuestionSuivante').hidden = false;
-      document.getElementById('caseARemplir').value=""; 
+      boutonCarte.style.pointerEvents='none';
+      jeNeSaisPas.style.visibility='visible';
+      groupeEtape3.hidden=false;
+      boutonQuestionSuivante.disabled = false;
+    	boutonQuestionSuivante.hidden = false;
+      caseARemplir.value=""; 
     }
   
   //initialisation de l'étape 3 après l'appui sur Start : on ne peut que répondre, pas passer à la question suivante
   if(jeuEnCours==3 && questionZero)
     {
-      document.getElementById('caseARemplir').value=""; 
-      document.getElementById('jeNeSaisPas').disabled=false;
-      document.getElementById('boutonValider').disabled=false;
-      document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FFF7E6";
-      document.getElementById('boutonQuestionSuivante').disabled=true;
-      document.getElementById('caseARemplir').focus();
-      document.getElementById('numQuestion').hidden=false;
+      caseARemplir.value=""; 
+      jeNeSaisPas.disabled=false;
+      boutonValider.disabled=false;
+      boutonQuestionSuivante.style.backgroundColor="#FFF7E6";
+      boutonQuestionSuivante.disabled=true;
+      caseARemplir.focus();
+      numQuestion.hidden=false;
       questionZero=false;
     }
 }
@@ -149,7 +149,6 @@ function retournerCarte()
 function tirerNouvelleCarte()
 {
   numeroQuestion++;
-  var boutonCarte = document.getElementById('boutonCarte');
   boutonCarte.value=tableauCartes[2*numeroQuestion-2];
   boutonCarte.focus(); // rendre le focus à la carte à retourner pour pouvoir retourner au clic sur entrée
   boutonCarte.style.backgroundColor="#47B19B";
@@ -158,39 +157,41 @@ function tirerNouvelleCarte()
     //les tirer dans l'ordre pour ne pas les tirer plusieurs fois (quitte à choisir dix questions aléatoirement dans le load)
   if(numeroQuestion==10 && jeuEnCours==1) //fin jeu 1, on met le bouton pour le passage à l'étape 2
     {
-      document.getElementById('boutonEtape2').hidden = false;
-  		document.getElementById('boutonQuestionSuivante').disabled = true;
+      boutonEtape2.hidden = false;
+  		boutonQuestionSuivante.disabled = true;
     }
   if(jeuEnCours==3)
     {
-      document.getElementById('caseARemplir').value=""; 
-      document.getElementById('jeNeSaisPas').disabled=false;
-      document.getElementById('boutonValider').disabled=false;
-      document.getElementById('boutonQuestionSuivante').style.backgroundColor="#FFF7E6";
-      document.getElementById('boutonQuestionSuivante').disabled=true;
-      document.getElementById('caseARemplir').focus();
-      document.getElementById('espaceReponse').hidden=true;
+      caseARemplir.value=""; 
+      jeNeSaisPas.disabled=false;
+      boutonValider.disabled=false;
+      boutonQuestionSuivante.style.backgroundColor="#FFF7E6";
+      boutonQuestionSuivante.disabled=true;
+      caseARemplir.focus();
+      espaceReponse.hidden=true;
     }
 }
   //ETAPE DEUX : RELIER LE MOT ET SA TRADUCTION (JEU DES PAIRES)
   function chargerEtape2()
   {    
-    document.getElementById('boutonCarte').style.visibility= 'hidden';
-    document.getElementById('boutonEtape2').hidden = true;
-  document.getElementById('numQuestion').hidden=true;  document.getElementById('boutonQuestionSuivante').hidden = true;
-    document.getElementById('tableau').hidden=false;
-    document.getElementById('espaceConsigne').innerHTML="Click on a word and its translation to win!";
-    document.getElementById('espaceReponse').hidden = false;
-    document.getElementById('nomEtape').innerHTML='Second step : find the pairs';
-    document.getElementById('boutonQuestionSuivante').disabled=true;
+    boutonCarte.style.visibility= 'hidden';
+    boutonEtape2.hidden = true;
+    numQuestion.hidden=true;  
+    boutonQuestionSuivante.hidden = true;
+    tableau.hidden=false;
+    espaceConsigne.innerHTML="Click on a word and its translation to win!";
+    espaceReponse.hidden = false;
+    nomEtape.innerHTML='Second step : find the pairs';
+    boutonQuestionSuivante.disabled=true;
 
     jeuEnCours=2;
+
     //AFFICHAGE DU TABLEAU TYPE MEMORY
- 
     var numeroCase = "case1";
     var tableauMelange = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
     var temp;
     
+    //on mélange les propositions
     for(var i=0; i<10; i++)
       {
             rnd = Math.floor(Math.random() * (20));
@@ -201,6 +202,7 @@ function tirerNouvelleCarte()
                     
       }
     
+    //on remplit les cases du tableau avec les propositions
     for(var i=1; i<21; i++)
       {
         numeroCase = numeroCase.slice(0,4);
@@ -210,39 +212,45 @@ function tirerNouvelleCarte()
    
   }
   
+  // variables nécessaires à l'étape 2
   var nombreCartesColorees = 0;
   var premiereCaseCliquee;
   var deuxiemeCaseCliquee;
   var reponsePrecedenteJuste=false;
   var nombreQuestionsRepondues=0;
-  var scoreEtape2=10; 
-  function test(caseCliquee) //changer nom fonction
+  var scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
+
+  function verifierCaseCliquee(caseCliquee) //changer nom fonction
   {
-      if(nombreCartesColorees == 0)
+      if(nombreCartesColorees == 0) //on n'a pas encore cliqué sur une carte
       {
-        if(premiereCaseCliquee!=null)
+        if(premiereCaseCliquee!=null) //ce n'est alors pas le premier tour, il faut tenir compte du coup précédent
           {
-           
             if(reponsePrecedenteJuste)
-              {
+            {
+              //on met les cases de la paire qui vient d'être éliminée à la couleur de fond
               premiereCaseCliquee.style.backgroundColor="#FFE8BF"; 
               premiereCaseCliquee.innerHTML =" ";
               premiereCaseCliquee.style.pointerEvents='none';
         		 	deuxiemeCaseCliquee.style.backgroundColor="#FFE8BF"; 
               deuxiemeCaseCliquee.innerHTML =" ";
               deuxiemeCaseCliquee.style.pointerEvents='none';
-              }
+            }
             else
-              {
+            {
+              //ou on les remet à la couleur des cases à éliminer si c'était un mauvais appariement
               premiereCaseCliquee.style.backgroundColor="#E89259";
-        			deuxiemeCaseCliquee.style.backgroundColor="#DBFFDF";
-              }
+        			deuxiemeCaseCliquee.style.backgroundColor="#E89259";
+            }
           }
+
+        //on colore la case cliquée
         caseCliquee.style.backgroundColor = "#47B19B";
         nombreCartesColorees++;
         premiereCaseCliquee = caseCliquee;
       }
-    else if (nombreCartesColorees == 1)
+
+      else if (nombreCartesColorees == 1) //ça ne peut valoir que 0 ou 1
       {
         deuxiemeCaseCliquee=caseCliquee;
         caseCliquee.style.backgroundColor = "#47B19B";
@@ -255,14 +263,14 @@ function tirerNouvelleCarte()
                 if(premiereCaseCliquee.innerHTML == tableauCartes[i+1]) 
                   {
                     //bon appariement
-                    document.getElementById('espaceReponse').innerHTML ="Good answer!"
+                    espaceReponse.innerHTML ="Good answer!"
                     reponsePrecedenteJuste=true;
                     nombreQuestionsRepondues++;
                   }
                 else 
                 	{
                   	//mauvais appariement 
-                    document.getElementById('espaceReponse').innerHTML ="That's a wrong answer. You lose a point";
+                    espaceReponse.innerHTML ="Wrong answer: -1";
                     reponsePrecedenteJuste=false;
                     scoreEtape2--;
                 	}
@@ -272,7 +280,7 @@ function tirerNouvelleCarte()
                 if(premiereCaseCliquee.innerHTML == tableauCartes[i-1]) 
                   {
                     //bon appariement
-                    document.getElementById('espaceReponse').innerHTML ="Good answer!"
+                    espaceReponse.innerHTML ="Good answer!"
                     reponsePrecedenteJuste=true;
                     nombreQuestionsRepondues++;
                     
@@ -280,16 +288,16 @@ function tirerNouvelleCarte()
                 else 
                 	{
                   	//mauvais appariement 
-                    document.getElementById('espaceReponse').innerHTML ="That's a wrong answer. You lose a point";
+                    espaceReponse.innerHTML ="Wrong answer: -1";
                     reponsePrecedenteJuste=false;
                     scoreEtape2--;
                 	}
               }
           }
-        document.getElementById('espaceScore').innerHTML="Your score is: "+scoreEtape2+"/10";
+        espaceScore.innerHTML="Score: "+scoreEtape2+"/10";
         if(nombreQuestionsRepondues==10)
                   {
-                    document.getElementById('boutonEtape3').hidden = false;
+                    boutonEtape3.hidden = false;
                   }
         nombreCartesColorees = 0;
       }
@@ -304,7 +312,7 @@ function tirerNouvelleCarte()
     jeuEnCours=3; 
    
     //on cache les éléments de l'étape précédente
-    document.getElementById('tableau').hidden=true;
+    tableau.hidden=true;
     
     //et on affiche ceux de cette étape qui apparaissent avant le clic sur Start
     document.getElementById('espaceConsigne').innerHTML = "You will now have to write the translation of the words displayed on the cards.";
@@ -356,8 +364,17 @@ function tirerNouvelleCarte()
     retournerCarte(); //affiche la bonne réponse dans la carte
     document.getElementById('espaceScore').innerHTML="Your score is: "+scoreEtape3+"/10";
     
-    if(numeroQuestion==10) //fin du jeu, on cache tous les éléments et on affiche le score
+    if(numeroQuestion==10) //fin du jeu, on affiche le bouton de fin
       {
+        document.getElementById('boutonFin').hidden = false;
+        document.getElementById('boutonFin').focus();
+        document.getElementById('boutonQuestionSuivante').disabled=true;
+      }
+  }
+
+  function terminer()
+  {
+    //fin du jeu, on cache tous les éléments et on affiche le score
         document.getElementById('nomEtape').innerHTML ="End of the game! You scored "+scoreEtape2+"/10 at the pairing game and "+scoreEtape3+"/10 at the translating game.";
         document.getElementById('boutonCarte').style.visibility= 'hidden';
         document.getElementById('boutonQuestionSuivante').style.visibility= 'hidden';
@@ -367,5 +384,4 @@ function tirerNouvelleCarte()
         document.getElementById('espaceConsigne').hidden=true;
         document.getElementById('espaceReponse').hidden=true;
         document.getElementById('numQuestion').hidden=true;
-      }
   }

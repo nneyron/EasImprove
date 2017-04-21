@@ -22,6 +22,20 @@ body
     left:40%;
 }
 
+#boutonRejouer
+{
+    background-color: white;
+    border: none;
+    color: black;
+    width : 100px;
+    height : 50px;
+    text-align: center;
+    font-size: 16px;
+    border-radius : 5%;
+    position:relative;
+    top:30%;
+    left:45%;
+}
 
 /* Gestion des canvas superposés */
 #canvases 

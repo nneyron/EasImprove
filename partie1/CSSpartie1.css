@@ -1,0 +1,118 @@
+body {
+  background-color: #FFE8BF;
+}
+
+#boutonCarte {
+    background-color: #8D5838; 
+    border: none;
+    color: white;
+    width : 400px;
+    height : 250px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius : 5%;
+    position:absolute;
+    top:110px;
+    left:120px;
+}
+
+#jeNeSaisPas {
+    background-color: #FFF7E6;
+    color: grey;
+    width : 80px;
+    height : 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-style: solid;
+    border-color: #FFC98E;
+    border-radius : 5%;
+    position:absolute;
+    top:210px;
+    left:17px;
+}
+
+#boutonQuestionSuivante{
+	width:90px;
+	height:90px;
+  color:grey;
+	background:#FFF7E6;
+	font: 12px Arial;
+	border-radius:50%;
+	border-style: solid;
+  border-color: #FFC98E;
+  position:absolute;
+  top:110px;
+  left:15px;
+}
+
+#boutonEtape2, #boutonEtape3{
+	width:90px;
+	height:60px;
+	background:#FFF7E6;
+	font: 18px Arial;
+	border-radius:50%;
+	border-style: solid;
+  border-color: #FFC98E;
+	color:grey;
+  position:absolute;
+  top:210px;
+  left:15px;
+}
+
+#tableau {
+  height:450px;
+  width:800px;
+  text-align:center;
+  border:none;
+  background-color:#FFE8BF;
+  border-spacing: 10px;
+  position:absolute;
+  left:120px;
+}
+
+td{
+  border: 1px solid grey;
+  border-radius: 8%;
+  background-color: #E89259;
+}
+
+#nomEtape
+{
+  color: #444444;
+  font: 18px Arial;
+}
+#numQuestion
+{
+  color: #444444;
+  font: 18px Times;
+}
+
+#boutonValider, #boutonFin {
+    background-color: #FFFFFF; /* Green */
+    border: none;
+    color: grey;
+    width : 55px;
+    height : 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+  border-radius : 13%;
+}
+
+#numQuestion{
+  position:absolute;
+  top:370px;
+  left:15px;
+}
+/*
+%E89259 orange
+%FFE8BF beige
+%314A5E canard (foncé)
+%2A8399 canard
+%47B19B
+*/
