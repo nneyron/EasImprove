@@ -36,6 +36,7 @@ DONE    faire disparaître la case si c'est bien une fausse prop
 mettre des vaisseaux à la place des boutons
 jauge de PV/score ?
 nettoyer et commenter le code
+fonction ondocumentready
 */
 
 
@@ -336,6 +337,7 @@ function detruireVaisseauAlien(lieuDuTir)
 {
     score += 6;
     var nomContexte = "ctxProp"+lieuDuTir;
+    var nomElement = "#canvasProp"+lieuDuTir;
     sonExplosion.play();
 
     //on fait disparaître le vaisseau ennemi
@@ -347,7 +349,7 @@ function detruireVaisseauAlien(lieuDuTir)
     window[nomContexte].textAlign = "center";
     window[nomContexte].fillText("+5",120*(lieuDuTir-1)+110,tableauPositionsQuestions[lieuDuTir-1]+40);
 
-    setTimeout(function() {supprimeImageBombe(nomContexte);},500);
+    setTimeout(function() {$(nomElement).fadeOut(500);},1000);
 
     //si c'était le dernier vaisseau à détruire, c'est terminé
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
