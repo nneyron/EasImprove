@@ -2,8 +2,9 @@
 <head>
 <meta charset="utf-8"/> 
 <link rel="stylesheet" style="text/css" href="CSSpartie1.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
 <title> Eas'Improve </title>
-
 <script type="text/javascript" src="source.js">
 </script>
 </head>
@@ -57,16 +58,29 @@
 <input type="button" id="boutonEtape3" title="Start the next step" value="Step 3" onclick="chargerEtape3()"></input>
   
 <p>
-<input type="submit" id="boutonCarte"  title="Click to flip" onclick="retournerCarte()" onmouseover="" style="cursor: pointer;"></input>
+<input class="front" type="submit" id="boutonCarte"  title="Click to flip" onclick="retournerCarte()" onmouseover="" style="cursor: pointer;"></input>
+<!--
+<section class="container">
+  <div id="card">
+    <figure class="front"  id="boutonCarte"  title="Click to flip" onclick="retournerCarte()" onmouseover="" style="cursor: pointer;">1</figure>
+    <figure class="back" id="boutonCarte"  title="Click to flip" onclick="retournerCarte()" onmouseover="" style="cursor: pointer;">2</figure>
+  </div>
+</section>-->
 <input type="submit" id="jeNeSaisPas"  title="Pass the question" value="I don't know" onclick="verifierReponse()"></input>
 <input type="button" id="boutonQuestionSuivante" title="Go to the next question" value="Next" onclick="tirerNouvelleCarte()" hidden=true></input>
 <input type="button" id="boutonEtape2" title="Start the next step" value="Step 2" onclick="chargerEtape2()"></input>
 </p>
 
+<img id="imageAnswer" src="goodAnswer.png" alt="Good answer" style="width:64px; height:64px; position:absolute ; top:340px ; left:25px">
+
 <p id=groupeEtape3 style="position:absolute; top:400px ;">
 Enter your translation: 
 <input type="text" id="caseARemplir" ></input>
 <input type="submit" id=boutonValider value="Submit" onclick="verifierReponse()">
-<input type="button" id=boutonFin value="Quit" onclick="terminer()">
 </p>
+
+<input type="button" id=boutonFin value="Quit" onclick="terminer() " style="position:absolute; top:400px ; left:350px">
+
+
+
 </body> 

@@ -1,3 +1,38 @@
+#card.flipped {
+  transform: translateX( -100% ) rotateY( -180deg );
+}
+
+#card { transform-origin: right center; }
+
+#card figure {
+  margin: 0;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+#card .back {
+  transform: rotateY( 180deg );
+}
+
+#card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+.container { 
+  width: 200px;
+  height: 260px;
+  position: relative;
+  perspective: 800px;
+}
+
+
+
 body {
   background-color: #FFE8BF;
 }
