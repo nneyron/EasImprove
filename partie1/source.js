@@ -6,10 +6,12 @@
   var scoreEtape2 = 0; //à merger avec score !!
   var scoreEtape3 = 0;
   var jeuEnCours = 1;
-      var card = document.getElementById('card');
+  var card = document.getElementById('card');
+  var rejouer = false;
 
 $(document).ready(function(){
   //disabled bputon start false + disp icone chargement
+  boutonCarte.disabled = false;
 });
 
 //Fonction de récupération des données de l'API
@@ -41,6 +43,7 @@ window.onload = function()
     var boutonEtape2 = document.getElementById('boutonEtape2');
     var boutonEtape3 = document.getElementById('boutonEtape3');
     var boutonCarte = document.getElementById('boutonCarte');
+    boutonCarte.disabled = true;
     var boutonQuestionSuivante = document.getElementById('boutonQuestionSuivante');
     var boutonValider = document.getElementById('boutonValider');
 
@@ -54,7 +57,7 @@ window.onload = function()
     var goodAnswer = document.getElementById('goodAnswer');
     var wrongAnswer = document.getElementById('wrongAnswer');  
 
-    chargerTableau()  
+    //chargerTableau()  
 }
 
 
@@ -92,7 +95,23 @@ var numeroQuestion = 1;
 function afficherCarte()
 {
 //affiche l'étape 1 avec la carte qui vaut 'Start'
-  chargerTableau();
+  if(!rejouer)
+  {
+    chargerTableau();
+  }
+
+  boutonRejouer.style.visibility = 'hidden';
+  //boutonRejouer.style.visibility = 'visible';
+  boutonCarte.style.backgroundColor="#8D5838";
+  boutonCarte.style.visibility = 'visible';
+  boutonCarte.disabled = false;
+  boutonQuestionSuivante.disabled = false;
+  boutonQuestionSuivante.style.visibility = 'visible';
+  numeroQuestion=1;
+  numQuestion.value="";
+  numQuestion.hidden = false;
+  jeuEnCours=1;
+  espaceScore.hidden = true;
   boutonCarte.value="Start"; 
   boutonFin.hidden = true;
   boutonEtape2.hidden = true;
@@ -106,7 +125,6 @@ function afficherCarte()
   nomEtape.innerHTML='First step : flip the cards and learn!';
 }
   
-
 
 function retournerCarte() 
 {
@@ -189,9 +207,26 @@ function tirerNouvelleCarte()
     }
 }
   //ETAPE DEUX : RELIER LE MOT ET SA TRADUCTION (JEU DES PAIRES)
+
+ // variables nécessaires à l'étape 2
+  var nombreCartesColorees = 0;
+  var premiereCaseCliquee;
+  var deuxiemeCaseCliquee;
+  var reponsePrecedenteJuste=false;
+  var nombreQuestionsRepondues=0;
+  var scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
+
+
   function chargerEtape2()
   {    
+     // variables nécessaires à l'étape 2
+    nombreCartesColorees = 0;
+    reponsePrecedenteJuste=false;
+    nombreQuestionsRepondues=0;
+    scoreEtape2=10; 
+
     boutonCarte.style.visibility= 'hidden';
+    espaceScore.hidden = false;
     boutonEtape2.hidden = true;
     numQuestion.hidden=true;  
     boutonQuestionSuivante.hidden = true;
@@ -229,14 +264,7 @@ function tirerNouvelleCarte()
    
   }
   
-  // variables nécessaires à l'étape 2
-  var nombreCartesColorees = 0;
-  var premiereCaseCliquee;
-  var deuxiemeCaseCliquee;
-  var reponsePrecedenteJuste=false;
-  var nombreQuestionsRepondues=0;
-  var scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
-
+ 
   function verifierCaseCliquee(caseCliquee) //changer nom fonction
   {
     var score=scoreEtape2;
@@ -313,6 +341,19 @@ function tirerNouvelleCarte()
                     reponsePrecedenteJuste=false;
                     scoreEtape2--;
                 	}
+              }
+
+              //le joueur a perdu tous ses points, il doit retourner aux flashcards
+              if(scoreEtape2 == 0)
+              {
+                alert('You lost! You will have to try again...');
+                rejouer = true;
+                premiereCaseCliquee.style.backgroundColor="#E89259"; 
+                deuxiemeCaseCliquee.style.backgroundColor="#E89259"; 
+                premiereCaseCliquee = null;
+                deuxiemeCaseCliquee = null;
+                numQuestion.value = "";
+                afficherCarte();
               }
           }
 
@@ -423,6 +464,7 @@ function tirerNouvelleCarte()
         boutonFin.style.visibility = 'visible';
         boutonFin.focus();
         boutonQuestionSuivante.disabled=true;
+        boutonQuestionSuivante.style.backgroundColor="#FFF7E6";
       }
   }
 
@@ -432,10 +474,23 @@ function tirerNouvelleCarte()
         nomEtape.innerHTML ="End of the game! You scored "+scoreEtape2+"/10 at the pairing game and "+scoreEtape3+"/10 at the translating game.";
         boutonCarte.style.visibility= 'hidden';
         boutonQuestionSuivante.style.visibility= 'hidden';
+        boutonRejouer.style.visibility='visible';
+        boutonFin.style.visibility='hidden';
         jeNeSaisPas.style.visibility= 'hidden';
 				groupeEtape3.hidden=true;
  				espaceScore.hidden=true;
         espaceConsigne.hidden=true;
         espaceReponse.hidden=true;
         numQuestion.hidden=true;
+  }
+
+  function nouvellePartie()
+  {
+    rejouer = false; //pour rejouer avec de nouveaux mots
+    tableauQuestionsAPoser = [];
+    tableauVerbes = []; //toutes les paires possibles
+    tableauCartes = []; //les dix paires qui seront dans l'exercice
+    scoreEtape2 = 0; //à merger avec score !!
+    scoreEtape3 = 0;
+    afficherCarte();
   }
