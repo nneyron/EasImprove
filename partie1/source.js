@@ -206,6 +206,8 @@ function tirerNouvelleCarte()
       espaceReponse.hidden=true;
     }
 }
+
+
   //ETAPE DEUX : RELIER LE MOT ET SA TRADUCTION (JEU DES PAIRES)
 
  // variables nécessaires à l'étape 2
@@ -219,7 +221,7 @@ function tirerNouvelleCarte()
 
   function chargerEtape2()
   {    
-     // variables nécessaires à l'étape 2
+     // variables nécessaires à l'étape 2 (si on rejoue on a besoin de les remettre ici)
     nombreCartesColorees = 0;
     reponsePrecedenteJuste=false;
     nombreQuestionsRepondues=0;
@@ -243,6 +245,15 @@ function tirerNouvelleCarte()
     var tableauMelange = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
     var temp;
     
+    for(var k =1; k<21;k++)
+        {
+          numeroCase = "case";
+          numeroCase = numeroCase.concat(k);
+          document.getElementById(numeroCase).style.backgroundColor="#E89259";
+          document.getElementById(numeroCase).style='cursor : pointer;';
+        }
+
+
     //on mélange les propositions
     for(var i=0; i<10; i++)
       {
@@ -490,7 +501,8 @@ function tirerNouvelleCarte()
     tableauQuestionsAPoser = [];
     tableauVerbes = []; //toutes les paires possibles
     tableauCartes = []; //les dix paires qui seront dans l'exercice
-    scoreEtape2 = 0; //à merger avec score !!
+    scoreEtape2 = 10; 
     scoreEtape3 = 0;
+    boutonCarte.style = "cursor : pointer";
     afficherCarte();
   }
