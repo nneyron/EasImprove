@@ -176,8 +176,8 @@ function chargerQuestions()
             tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
     }
 
-    console.log(tableauQuestionsAPoser);
-    console.log(tableauQuestions);
+    //console.log(tableauQuestionsAPoser);
+    //console.log(tableauQuestions);
 
     //initialisation du nombre de vaisseaux à détruire
     for(var i = 0; i<10;i++)
@@ -185,7 +185,7 @@ function chargerQuestions()
             if (tableauQuestions[i*2+1] == "F")
             nbVaisseauxADetruire++;
     }
-    console.log(nbVaisseauxADetruire);
+    //console.log(nbVaisseauxADetruire);
 }
 
 
@@ -219,8 +219,6 @@ function initialiserPartie()
     {
             tableauPositionsQuestions[i] = Math.floor(Math.random() * (200));
     }
-
-    var nomContexte;
 
     for(var i =0; i<10;i++)
     {
@@ -336,7 +334,7 @@ function supprimeImageBombe(nomContexte)
 function detruireVaisseauAlien(lieuDuTir)
 {
     score += 6;
-    var nomContexte = "ctxProp"+lieuDuTir;
+    nomContexte = "ctxProp"+lieuDuTir;
     var nomElement = "#canvasProp"+lieuDuTir;
     sonExplosion.play();
 
@@ -347,10 +345,10 @@ function detruireVaisseauAlien(lieuDuTir)
     window[nomContexte].fillStyle = "white";
     window[nomContexte].font="30px Arial";
     window[nomContexte].textAlign = "center";
-    window[nomContexte].fillText("+5",120*(lieuDuTir-1)+110,tableauPositionsQuestions[lieuDuTir-1]+40);
+    window[nomContexte].fillText("+6",120*(lieuDuTir-1)+110,tableauPositionsQuestions[lieuDuTir-1]+40);
 
     setTimeout(function() {$(nomElement).fadeOut(500);},1000);
-
+//supprimeImageBombe(nomContexte);
     //si c'était le dernier vaisseau à détruire, c'est terminé
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
     {
@@ -399,7 +397,9 @@ function rejouer()
     canvas.hidden=false;
     //chargerQuestions();
     //initialiserPartie();
-   console.log(tableauQuestions);
+    console.log(tableauQuestions);
+    console.log(tableauVaisseauxDisparus);
+
 }
 
 function viderCanvas()
