@@ -413,7 +413,7 @@ function tirerNouvelleCarte()
       boutonQuestionSuivante.disabled=true;
       espaceScore.innerHTML=" ";
       espaceReponse.innerHTML=" ";
-      nomEtape.innerHTML='Third exercice : translation';
+      nomEtape.innerHTML='Third exercise : translation';
       
       //sauf ceux qui n'apparaissent qu'après le clic sur "Start"
       jeNeSaisPas.style.visibility='hidden';
@@ -505,4 +505,5 @@ function tirerNouvelleCarte()
     scoreEtape3 = 0;
     boutonCarte.style = "cursor : pointer";
     afficherCarte();
+    espaceReponse.value = "";
   }
