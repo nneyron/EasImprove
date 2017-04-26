@@ -157,21 +157,18 @@ function chargerQuestions()
 
     for(var i =0; i<10;i++)
     {
-        /*questionDejeAttribuee = false;
             do
             {
+                questionDejeAttribuee = false;
                 tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
-                alert(tableauQuestionsAPoser[i]+" "+i);
                 for (var j=0; j<i; j++)
                 {
-                    alert("j="+j);
                     if(tableauQuestionsAPoser[i]==tableauQuestionsAPoser[j])
-                {questionDejeAttribuee = true;} 
+                        questionDejeAttribuee = true;
                 }
                 console.log(tableauQuestionsAPoser[i]);
             }
-            while(questionDejeAttribuee);*/
-            tableauQuestionsAPoser[i] = Math.floor(Math.random() * (48));
+            while(questionDejeAttribuee);
             tableauQuestions[2*i] = tableau48Questions[tableauQuestionsAPoser[i]*2];
             tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
     }

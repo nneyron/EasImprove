@@ -30,6 +30,7 @@ function ajaxGet(url, callback) {
 //Fonction d'initialisation des variables associées aux objets HTML
 window.onload = function() 
 {
+    chargerTableau();
     var espaceScore = document.getElementById('espaceScore');
     var espaceReponse = document.getElementById('espaceReponse');
     var espaceConsigne = document.getElementById('espaceConsigne');
@@ -77,9 +78,17 @@ function chargerQuestions()
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
 for(var i =0; i<10;i++)
    {
-        tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
-        //alert(tableauQuestionsAPoser[i]);
-        //alert(tableauVerbes[tableauQuestionsAPoser[i]*2]);
+            do
+            {
+                questionDejeAttribuee = false;
+                tableauQuestionsAPoser[i] = Math.floor(Math.random() * (104));
+                for (var j=0; j<i; j++)
+                {
+                    if(tableauQuestionsAPoser[i]==tableauQuestionsAPoser[j])
+                        questionDejeAttribuee = true;
+                }
+            }
+            while(questionDejeAttribuee);
         tableauCartes[2*i] = tableauVerbes[tableauQuestionsAPoser[i]*2];
         tableauCartes[2*i+1] = tableauVerbes[tableauQuestionsAPoser[i]*2+1];    
    }
@@ -218,7 +227,7 @@ function tirerNouvelleCarte()
   var deuxiemeCaseCliquee;
   var reponsePrecedenteJuste=false;
   var nombreQuestionsRepondues=0;
-  var scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
+  scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
 
   //Fonction d'affichage initial de l'étape 2
   function chargerEtape2()
@@ -429,6 +438,7 @@ function tirerNouvelleCarte()
       jeNeSaisPas.style.visibility='hidden';
     }
   
+  //Fonction qui vérifie la réponse entrée par l'utilisateur
   function verifierReponse()
   {
     var bonneReponse = false;
