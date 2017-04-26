@@ -224,6 +224,7 @@ function initialiserPartie()
     {
             //on récupère le contexte du canvas associé à la (i+1)è question
             nomContexte="ctxProp"+(i+1);
+            nomElement = "#canvasProp"+(i+1);
 
             //et on ajoute le vaisseau ennemi et la proposition
             window[nomContexte].drawImage(vaisseauAlien, 120*i+60,tableauPositionsQuestions[i],50,50);
@@ -231,6 +232,7 @@ function initialiserPartie()
             window[nomContexte].fillStyle = "white";
             window[nomContexte].textAlign = "center";
             window[nomContexte].fillText(tableauQuestions[i*2],120*i+85,tableauPositionsQuestions[i]+55,120);
+            $(nomElement).fadeIn(0);//permet de réécrire sur le fadeout
     }
 }
 
@@ -348,7 +350,7 @@ function detruireVaisseauAlien(lieuDuTir)
     window[nomContexte].fillText("+6",120*(lieuDuTir-1)+110,tableauPositionsQuestions[lieuDuTir-1]+40);
 
     setTimeout(function() {$(nomElement).fadeOut(500);},1000);
-//supprimeImageBombe(nomContexte);
+    //supprimeImageBombe(nomContexte);
     //si c'était le dernier vaisseau à détruire, c'est terminé
     if(tableauVaisseauxDisparus.length==nbVaisseauxADetruire)
     {
@@ -393,6 +395,7 @@ function rejouer()
     viderCanvas();
     setTimeout(chargerQuestions,50);
     setTimeout(initialiserPartie,100);
+    
     fini = false;
     canvas.hidden=false;
     //chargerQuestions();

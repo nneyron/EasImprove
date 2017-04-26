@@ -1,18 +1,13 @@
 // source.js : code Flashcards (Eas'improve partie 1)
 
-  var tableauQuestionsAPoser = [];
+  var tableauQuestionsAPoser = []; //tableau pour récupérer les données depuis l'API
   var tableauVerbes = []; //toutes les paires possibles
   var tableauCartes = []; //les dix paires qui seront dans l'exercice
-  var scoreEtape2 = 0; //à merger avec score !!
+  var scoreEtape2 = 0;
   var scoreEtape3 = 0;
   var jeuEnCours = 1;
   var card = document.getElementById('card');
   var rejouer = false;
-
-$(document).ready(function(){
-  //disabled bputon start false + disp icone chargement
-  boutonCarte.disabled = false;
-});
 
 //Fonction de récupération des données de l'API
 function ajaxGet(url, callback) {
@@ -32,7 +27,7 @@ function ajaxGet(url, callback) {
     req.send(null);
 }
 
-
+//Fonction d'initialisation des variables associées aux objets HTML
 window.onload = function() 
 {
     var espaceScore = document.getElementById('espaceScore');
@@ -56,8 +51,6 @@ window.onload = function()
 
     var goodAnswer = document.getElementById('goodAnswer');
     var wrongAnswer = document.getElementById('wrongAnswer');  
-
-    //chargerTableau()  
 }
 
 
@@ -65,16 +58,20 @@ window.onload = function()
 function chargerTableau()
 {
   ajaxGet("https://easimprove.herokuapp.com/api.php/verbes", function(reponse) {
-  var resultat = JSON.parse(reponse);
-  resultat.verbes.records.forEach(function (verbe) {
+      var resultat = JSON.parse(reponse);
+      resultat.verbes.records.forEach(function (verbe) {
       console.log(verbe[0],verbe[1], verbe[2], verbe[3], verbe[4]);
       tableauVerbes[(verbe[0]-1)*2] = ""+verbe[1] +" "+ verbe[2];
       tableauVerbes[(verbe[0]-1)*2+1] = ""+verbe[3];
-      chargerQuestions();
   });
+      chargerQuestions();
+
+      //Rend cliquable le bouton Start une fois que les questions sont chargées
+      boutonCarte.disabled = false;
 });
 }
 
+//Fonction qui établit les dix questions à poser pour le jeu
 function chargerQuestions()
 {
     //rajouter une gestion des doublons pour ne pas avoir deux fois le meme verbe
@@ -89,30 +86,24 @@ for(var i =0; i<10;i++)
 }
 
   
-var carteARemplir = document.getElementById('boutonCarte'); // voir où on le déclare
 var numeroQuestion = 1; 
 
+//Gère l'affichage de la flashcard pour l'exercice 1 et le 3
 function afficherCarte()
 {
-//affiche l'étape 1 avec la carte qui vaut 'Start'
+  //on ne change pas de tableau si on rejoue parce qu'on a perdu en partie 2
   if(!rejouer)
   {
     chargerTableau();
   }
 
+  //affichage
   boutonRejouer.style.visibility = 'hidden';
-  //boutonRejouer.style.visibility = 'visible';
   boutonCarte.style.backgroundColor="#8D5838";
   boutonCarte.style.visibility = 'visible';
-  boutonCarte.disabled = false;
-  boutonQuestionSuivante.disabled = false;
   boutonQuestionSuivante.style.visibility = 'visible';
-  numeroQuestion=1;
-  numQuestion.value="";
-  numQuestion.hidden = false;
-  jeuEnCours=1;
+  //numQuestion.hidden = false;
   espaceScore.hidden = true;
-  boutonCarte.value="Start"; 
   boutonFin.hidden = true;
   boutonEtape2.hidden = true;
   boutonEtape3.hidden = true;
@@ -122,26 +113,37 @@ function afficherCarte()
   groupeEtape3.hidden=true;
   boutonFin.style.visibility='hidden';
   jeNeSaisPas.style.visibility='hidden';
+ 
+  //affiche l'étape 1 avec la carte qui vaut 'Start'
+  boutonCarte.value="Start";
+
+  //rendre actif les bons boutons
+  boutonCarte.disabled = false; //nécessaire si on a rejoué
+  boutonQuestionSuivante.disabled = false;
+
+  numeroQuestion=1;
+  jeuEnCours=1;
+
   nomEtape.innerHTML='First step : flip the cards and learn!';
 }
   
 
 function retournerCarte() 
 {
-        // var card = document.getElementById('card');
-        // if (card.className === "")
-        //   card.className = 'flipped';
-        // else
-        //   card.className = '';
+  //sert à identifier la première question de l'étape 3, 
+  //pour laquelle on a de l'affichage particulier à faire
   if(numeroQuestion==0) 
   {
     questionZero=true;
     numeroQuestion++;
   }
   else {questionZero=false;}
+  
+  //à n'afficher qu'après le premier retournement
   boutonQuestionSuivante.hidden=false; 
   numQuestion.innerHTML='Question '+numeroQuestion;
-  
+  numQuestion.hidden = false;
+
   if(boutonCarte.value==tableauCartes[2*numeroQuestion-2])//si la carte affiche la question
   {
     //au clic, on affiche la réponse
@@ -155,7 +157,7 @@ function retournerCarte()
   	boutonCarte.style.backgroundColor="#47B19B";
   }
     
-  
+  //affichage pour l'étape 3
   if(jeuEnCours==3)
     {
       boutonCarte.style.pointerEvents='none';
@@ -181,15 +183,15 @@ function retournerCarte()
     }
 }
   
+//Fonction pour changer de questions
 function tirerNouvelleCarte()
 {
   numeroQuestion++;
   boutonCarte.value=tableauCartes[2*numeroQuestion-2];
   boutonCarte.focus(); // rendre le focus à la carte à retourner pour pouvoir retourner au clic sur entrée
-  boutonCarte.style.backgroundColor="#47B19B";
+  boutonCarte.style.backgroundColor="#47B19B"; // couleur des questions
   document.getElementById('numQuestion').innerHTML='Question '+numeroQuestion;
-    //tirer une nouvelle carte dans le tableau
-    //les tirer dans l'ordre pour ne pas les tirer plusieurs fois (quitte à choisir dix questions aléatoirement dans le load)
+
   if(numeroQuestion==10 && jeuEnCours==1) //fin jeu 1, on met le bouton pour le passage à l'étape 2
     {
       boutonEtape2.hidden = false;
@@ -218,15 +220,16 @@ function tirerNouvelleCarte()
   var nombreQuestionsRepondues=0;
   var scoreEtape2=10; //on commence à dix et on perd des points en cas d'ereur
 
-
+  //Fonction d'affichage initial de l'étape 2
   function chargerEtape2()
   {    
      // variables nécessaires à l'étape 2 (si on rejoue on a besoin de les remettre ici)
-    nombreCartesColorees = 0;
-    reponsePrecedenteJuste=false;
+    nombreCartesColorees = 0; //sert à compter le nombre de cases sélectionnées
+    reponsePrecedenteJuste=false; //faire disparaître les cases du tour précédent
     nombreQuestionsRepondues=0;
-    scoreEtape2=10; 
+    scoreEtape2=10; //score décroissant donc on part du max
 
+    //affichage
     boutonCarte.style.visibility= 'hidden';
     espaceScore.hidden = false;
     boutonEtape2.hidden = true;
@@ -243,8 +246,9 @@ function tirerNouvelleCarte()
     //AFFICHAGE DU TABLEAU TYPE MEMORY
     var numeroCase = "case1";
     var tableauMelange = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
-    var temp;
+    var temp; //variable temporaire
     
+    //on met toutes les cases de la bonne couleur (nécessaire si on rejoue)
     for(var k =1; k<21;k++)
         {
           numeroCase = "case";
@@ -254,7 +258,7 @@ function tirerNouvelleCarte()
         }
 
 
-    //on mélange les propositions
+    //on mélange les propositions en échangeant quelques cases au hasard
     for(var i=0; i<10; i++)
       {
             rnd = Math.floor(Math.random() * (20));
@@ -262,7 +266,6 @@ function tirerNouvelleCarte()
         		rnd2 = Math.floor(Math.random() * (20));
         		tableauMelange[rnd]=tableauMelange[rnd2];
         		tableauMelange[rnd2]=temp;
-                    
       }
     
     //on remplit les cases du tableau avec les propositions
@@ -275,11 +278,16 @@ function tirerNouvelleCarte()
    
   }
   
- 
+
+  //Fonction qui vérifie si les deux cases cliquées sont bien appariées
   function verifierCaseCliquee(caseCliquee) //changer nom fonction
   {
     var score=scoreEtape2;
-      if(nombreCartesColorees == 0) //on n'a pas encore cliqué sur une carte
+
+    //on n'a pas encore cliqué sur une carte, il n'y a pas d'appariement à vérifier
+    //mais il faut désélectionner les cases du tour précédent, les faire disparaître 
+    //si elles étaient bien appariées
+      if(nombreCartesColorees == 0) 
       {
         if(premiereCaseCliquee!=null) //ce n'est alors pas le premier tour, il faut tenir compte du coup précédent
           {
@@ -307,6 +315,7 @@ function tirerNouvelleCarte()
         premiereCaseCliquee = caseCliquee;
       }
 
+      //l'utilisateur vient de sélectionner une deuxième case, il faut vérifier l'appariement
       else if (nombreCartesColorees == 1) //ça ne peut valoir que 0 ou 1
       {
 
@@ -316,13 +325,13 @@ function tirerNouvelleCarte()
         // CODE DE VERIFICATION DE LA CONCORDANCE DES CASES CHOISIES
         for (var i=0;i<20;i++)
           {
-            if (deuxiemeCaseCliquee.innerHTML == tableauCartes[i] && i%2==0)//c'est pair donc une question
+            if (deuxiemeCaseCliquee.innerHTML == tableauCartes[i] && i%2==0)
+            //c'est pair donc la deuxième case cliquée est une question
               {
                 if(premiereCaseCliquee.innerHTML == tableauCartes[i+1]) 
                   {
                     //bon appariement
                     espaceReponse.innerHTML ="Good answer!"
-                    //$('#imageAnswer').fadeIn(50,function(){$('#imageAnswer').fadeOut(2500)});
                     reponsePrecedenteJuste=true;
                     nombreQuestionsRepondues++;
                   }
@@ -330,18 +339,17 @@ function tirerNouvelleCarte()
                 	{
                   	//mauvais appariement 
                     espaceReponse.innerHTML ="Wrong answer: -1";
-                    //$('#imageAnswer').fadeIn(50,function(){$('#imageAnswer').fadeOut(2500)});
                     reponsePrecedenteJuste=false;
                     scoreEtape2--;
                 	}
               }
-            else if (deuxiemeCaseCliquee.innerHTML == tableauCartes[i] && i%2==1)//reponse
+            else if (deuxiemeCaseCliquee.innerHTML == tableauCartes[i] && i%2==1)
+            //reponse
               {
                 if(premiereCaseCliquee.innerHTML == tableauCartes[i-1]) 
                   {
                     //bon appariement
                     espaceReponse.innerHTML ="Good answer!";
-                    //$('#imageAnswer').fadeIn(50,function(){$('#imageAnswer').fadeOut(2500)});
                     reponsePrecedenteJuste=true;
                     nombreQuestionsRepondues++;
                   }
@@ -354,11 +362,11 @@ function tirerNouvelleCarte()
                 	}
               }
 
-              //le joueur a perdu tous ses points, il doit retourner aux flashcards
+              //le joueur a perdu tous ses points, il doit retourner aux flashcards (étape 1)
               if(scoreEtape2 == 0)
               {
                 alert('You lost! You will have to try again...');
-                rejouer = true;
+                rejouer = true; //permet de ne pas changer de tableau de verbes
                 premiereCaseCliquee.style.backgroundColor="#E89259"; 
                 deuxiemeCaseCliquee.style.backgroundColor="#E89259"; 
                 premiereCaseCliquee = null;
@@ -377,6 +385,7 @@ function tirerNouvelleCarte()
               $('#imageAnswer').attr("src","./wrongAnswer.png");
           }
         
+        //affichage d'une image (bonne ou mauvaise réponse)
         $('#imageAnswer').stop(true, true).fadeOut();
         $('#imageAnswer').fadeIn(50,function(){$('#imageAnswer').fadeOut(2500)});
         espaceScore.innerHTML="Score: "+scoreEtape2+"/10";
@@ -399,6 +408,7 @@ function tirerNouvelleCarte()
       numeroQuestion = 0; 
       scoreEtape3=0;
       jeuEnCours=3; 
+      //on déplace l'endroit où s'affiche l'image de bonne ou mauvaise réponse
       document.getElementById('imageAnswer').style.top="310px";
     
       //on cache les éléments de l'étape précédente
@@ -426,7 +436,7 @@ function tirerNouvelleCarte()
     jeNeSaisPas.disabled=true;
     boutonValider.disabled=true;
     boutonQuestionSuivante.disabled=false;
-    boutonQuestionSuivante.focus();
+    boutonQuestionSuivante.focus(); //le seul bouton cliquable prend le focus
     boutonQuestionSuivante.style.backgroundColor="#E89259";
     
     if(caseARemplir.value=="") //si validation sans réponse ou appui sur "I don't know"
@@ -436,7 +446,7 @@ function tirerNouvelleCarte()
         bonneReponse=false;
       }
     
-  	else if(caseARemplir.value==tableauCartes[2*numeroQuestion-1])
+  	else if(caseARemplir.value==tableauCartes[2*numeroQuestion-1]) // bonne réponse
     	{
       	//augmenter score
       	scoreEtape3++;
@@ -447,7 +457,7 @@ function tirerNouvelleCarte()
         bonneReponse=true;
     	}
     
-    else
+    else // réponse entrée mais fausse
     	{
       	//dire que la réponse est fausse et donner la bonne
         espaceReponse.hidden=false;
@@ -479,13 +489,16 @@ function tirerNouvelleCarte()
       }
   }
 
+
+  //fonction qui gère la fin du jeu, on cache tous les éléments et on affiche le score
   function terminer()
   {
-    //fin du jeu, on cache tous les éléments et on affiche le score
+        //Rappel des scores
         nomEtape.innerHTML ="End of the game! You scored "+scoreEtape2+"/10 at the pairing game and "+scoreEtape3+"/10 at the translating game.";
+        
+        //on cache tous les autres éléments HTML
         boutonCarte.style.visibility= 'hidden';
         boutonQuestionSuivante.style.visibility= 'hidden';
-        boutonRejouer.style.visibility='visible';
         boutonFin.style.visibility='hidden';
         jeNeSaisPas.style.visibility= 'hidden';
 				groupeEtape3.hidden=true;
@@ -493,17 +506,23 @@ function tirerNouvelleCarte()
         espaceConsigne.hidden=true;
         espaceReponse.hidden=true;
         numQuestion.hidden=true;
+        
+        //sauf le bouton qui permet de rejouer
+        boutonRejouer.style.visibility='visible';
   }
 
+
+  //Fonction qui permet de rejouer, appelée par le click sur boutonRejouer
   function nouvellePartie()
   {
-    rejouer = false; //pour rejouer avec de nouveaux mots
-    tableauQuestionsAPoser = [];
-    tableauVerbes = []; //toutes les paires possibles
-    tableauCartes = []; //les dix paires qui seront dans l'exercice
-    scoreEtape2 = 10; 
-    scoreEtape3 = 0;
-    boutonCarte.style = "cursor : pointer";
-    afficherCarte();
-    espaceReponse.value = "";
+        rejouer = false; //pour rejouer avec de nouveaux mots
+        tableauQuestionsAPoser = [];
+        tableauVerbes = []; //toutes les paires possibles
+        tableauCartes = []; //les dix paires qui seront dans l'exercice
+        scoreEtape2 = 10; 
+        scoreEtape3 = 0;
+        boutonCarte.style = "cursor : pointer"; //ce bouton redevient cliquable
+        espaceReponse.value = "";
+        numQuestion.hidden = true;
+        afficherCarte();
   }
