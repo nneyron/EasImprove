@@ -83,6 +83,8 @@ window.onload = function()
     //tableau = document.getElementById('tableau');
     boutonCommencer = document.getElementById('boutonCommencer');
     boutonRejouer = document.getElementById('boutonRejouer');
+    boutonCommencer.disabled = true;
+    boutonCommencer.value="Chargement...";
 
     //canvas
     canvas = document.getElementById('canvas');
@@ -179,7 +181,10 @@ function chargerQuestions()
             if (tableauQuestions[i*2+1] == "F")
             nbVaisseauxADetruire++;
     }
-    //console.log(nbVaisseauxADetruire);
+
+    boutonCommencer.disabled = false;
+    boutonCommencer.value = "Start";
+
 }
 
 

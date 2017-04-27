@@ -40,6 +40,7 @@ window.onload = function()
     var boutonEtape3 = document.getElementById('boutonEtape3');
     var boutonCarte = document.getElementById('boutonCarte');
     boutonCarte.disabled = true;
+    boutonCarte.value = "Chargement..."
     var boutonQuestionSuivante = document.getElementById('boutonQuestionSuivante');
     var boutonValider = document.getElementById('boutonValider');
 
@@ -66,9 +67,6 @@ function chargerTableau()
       tableauVerbes[(verbe[0]-1)*2+1] = ""+verbe[3];
   });
       chargerQuestions();
-
-      //Rend cliquable le bouton Start une fois que les questions sont chargées
-      boutonCarte.disabled = false;
 });
 }
 
@@ -92,6 +90,10 @@ for(var i =0; i<10;i++)
         tableauCartes[2*i] = tableauVerbes[tableauQuestionsAPoser[i]*2];
         tableauCartes[2*i+1] = tableauVerbes[tableauQuestionsAPoser[i]*2+1];    
    }
+
+    //Rend cliquable le bouton Start une fois que les questions sont chargées
+    boutonCarte.disabled = false;
+    boutonCarte.value = "Start";
 }
 
   
@@ -103,6 +105,7 @@ function afficherCarte()
   //on ne change pas de tableau si on rejoue parce qu'on a perdu en partie 2
   if(!rejouer)
   {
+    boutonCarte.value="Chargement...";
     chargerTableau();
   }
 
@@ -123,8 +126,6 @@ function afficherCarte()
   boutonFin.style.visibility='hidden';
   jeNeSaisPas.style.visibility='hidden';
  
-  //affiche l'étape 1 avec la carte qui vaut 'Start'
-  boutonCarte.value="Start";
 
   //rendre actif les bons boutons
   boutonCarte.disabled = false; //nécessaire si on a rejoué
@@ -381,6 +382,7 @@ function tirerNouvelleCarte()
                 premiereCaseCliquee = null;
                 deuxiemeCaseCliquee = null;
                 numQuestion.value = "";
+                boutonCarte.value="Start";
                 afficherCarte();
               }
           }
