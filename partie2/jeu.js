@@ -173,9 +173,6 @@ function chargerQuestions()
             tableauQuestions[2*i+1] = tableau48Questions[tableauQuestionsAPoser[i]*2+1];
     }
 
-    //console.log(tableauQuestionsAPoser);
-    //console.log(tableauQuestions);
-
     //initialisation du nombre de vaisseaux à détruire
     for(var i = 0; i<10;i++)
     {
@@ -237,7 +234,7 @@ function initialiserPartie()
 //Fonction qui déplace la fusée (onmousemove event)
 function bougerFusee(event)
 {  
-    //déplacer la fusée selon les coordonnées en y de la souris
+    //déplacer la fusée selon les coordonnées en x de la souris
     position=event.offsetX-65;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(vaisseau, position, 350,120,160);
@@ -368,7 +365,8 @@ function terminer()
     boutonRejouer.hidden = false;
 }
 
-
+//Fonction qui permet de diminuer le score à chaque seconde qui s'écoule 
+//lorsqu'une partie est en cours
 function augmenterTemps()
 {
     if(!fini)
@@ -378,6 +376,7 @@ function augmenterTemps()
 }
 
 
+//Fonction qui permet de rejouer
 function rejouer()
 {    
     tableauQuestions = []; 
@@ -395,13 +394,10 @@ function rejouer()
     
     fini = false;
     canvas.hidden=false;
-    //chargerQuestions();
-    //initialiserPartie();
-    console.log(tableauQuestions);
-    console.log(tableauVaisseauxDisparus);
-
 }
 
+
+//Fonction qui permet de vider tous les canvasProp, afin de réécrire pour rejouer
 function viderCanvas()
 {
     ctx2.clearRect(0, 0, canvas.width, canvas.height);
