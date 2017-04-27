@@ -3,7 +3,7 @@
 //DECLARATION DES VARIABLES
 //Images et sons
 var vaisseau = new Image();
-vaisseau.src = "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png";
+vaisseau.src = "./rocket.png";
 var vaisseauAlien = new Image();
 vaisseauAlien.src = "./vaisseauAlien_petit.png";
 var explosion = new Image();
